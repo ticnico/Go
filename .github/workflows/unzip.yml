@@ -1,30 +1,48 @@
-name: Extract ZIP
+name: Extract ok.zip
 
 on:
   push:
+    branches:
+      - main
     paths:
-      - "ok.zip"
+      - ok.zip
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  unzip:
+  extract:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Extract ok.zip
+      - name: Check ZIP
         run: |
-          unzip -o ok.zip -d .
-          rm ok.zip
+          ls -lah
+          test -f ok.zip
 
-      - name: Commit extracted files
+      - name: Extract ZIP
+        run: |
+          unzip -o ok.zip -d extracted
+          cp -a extracted/. .
+          rm -rf extracted
+          rm -f ok.zip
+
+      - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git diff --cached --quiet || git commit -m "Extract ok.zip"
-          git push
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Extract ok.zip"
+            git push
+          fi
