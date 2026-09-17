@@ -1,0 +1,30 @@
+name: Extract ZIP
+
+on:
+  push:
+    paths:
+      - "ok.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract ok.zip
+        run: |
+          unzip -o ok.zip -d .
+          rm ok.zip
+
+      - name: Commit extracted files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Extract ok.zip"
+          git push
