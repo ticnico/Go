@@ -1,0 +1,194 @@
+<UserControl x:Class="GoldenBullet.Controls.AutoBlockSettingsViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoldenBullet.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Block Header Style -->
+        <Style x:Key="BlockHeaderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <!-- Section Label Style -->
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,12,0,8"/>
+        </Style>
+
+        <!-- Field Label Style -->
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style x:Key="BlockCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,6,0,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="checkBoxBorder"
+                                    Width="16" Height="16"
+                                    Background="#FF2D2D2D"
+                                    BorderBrush="#40D19900"
+                                    BorderThickness="1"
+                                    CornerRadius="3"
+                                    VerticalAlignment="Center">
+                                <Path x:Name="checkMark"
+                                      Data="M 0 4 L 3 7 L 8 0"
+                                      Stroke="White"
+                                      StrokeThickness="1.5"
+                                      Visibility="Collapsed"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                            </Border>
+                            <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="#40D19900"/>
+                                <Setter TargetName="checkBoxBorder" Property="Background" Value="#D19900"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="#40D19900"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Dynamic Panel Container Style -->
+        <Style x:Key="DynamicPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,4,0,8"/>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Main Card Container -->
+    <Border Background="#FF252525" 
+            BorderBrush="#40D19900" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Margin="8,4">
+
+        <StackPanel Margin="12">
+
+            <!-- Block Header -->
+            <Border Style="{StaticResource BlockHeaderStyle}">
+                <StackPanel>
+                    <!-- Block Name/ID -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <iconPacks:PackIconMaterial Kind="Puzzle" 
+                                                    Width="14" Height="14" 
+                                                    Foreground="#D19900" 
+                                                    Margin="0,0,6,0"
+                                                    VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding NameAndId}"
+                                   FontSize="13"
+                                   FontWeight="SemiBold"
+                                   Foreground="#FFE0E0E0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <!-- Block Description -->
+                    <TextBlock Text="{Binding Block.Descriptor.Description}"
+                               FontSize="11"
+                               FontStyle="Italic"
+                               Foreground="#FFAAAAAA"
+                               TextWrapping="Wrap"
+                               Margin="20,2,0,2"/>
+
+                    <!-- Extra Info -->
+                    <TextBlock Text="{Binding Block.Descriptor.ExtraInfo}"
+                               FontSize="10" 
+                               FontStyle="Italic"
+                               Foreground="#FF666666"
+                               TextWrapping="Wrap"
+                               Margin="20,0,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Label Field -->
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,12">
+                <TextBlock Style="{StaticResource FieldLabelStyle}" Text="Label:"/>
+                <TextBox Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding Label}"
+                         Width="200"/>
+            </StackPanel>
+
+            <!-- Safe Mode CheckBox -->
+            <CheckBox Style="{StaticResource BlockCheckBoxStyle}"
+                      Content="Safe mode (catch exceptions to data.ERROR)"
+                      IsChecked="{Binding SafeMode}"/>
+
+            <!-- Return Value Field (Conditional) -->
+            <StackPanel Orientation="Horizontal" 
+                        Margin="0,4,0,4"
+                        Visibility="{Binding HasReturnValue, Converter={StaticResource BoolToVis}}">
+                <TextBlock Style="{StaticResource FieldLabelStyle}" 
+                           Text="{Binding ReturnValueType}"/>
+                <TextBox Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding OutputVariable}"
+                         Width="200"/>
+            </StackPanel>
+
+            <!-- Is Capture CheckBox (Conditional) -->
+            <CheckBox Style="{StaticResource BlockCheckBoxStyle}"
+                      Content="Is Capture"
+                      Visibility="{Binding HasReturnValue, Converter={StaticResource BoolToVis}}"
+                      IsChecked="{Binding IsCapture}"
+                      Margin="0,2,0,8"/>
+
+            <!-- Settings Section -->
+            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Settings:"/>
+            <Border Style="{StaticResource DynamicPanelStyle}">
+                <StackPanel x:Name="settingsPanel" HorizontalAlignment="Stretch"/>
+            </Border>
+
+            <!-- Actions Section (Conditional) -->
+            <TextBlock Style="{StaticResource SectionLabelStyle}" 
+                       Text="Actions:"
+                       Visibility="{Binding HasActions, Converter={StaticResource BoolToVis}}"/>
+            <Border Style="{StaticResource DynamicPanelStyle}"
+                    Visibility="{Binding HasActions, Converter={StaticResource BoolToVis}}">
+                <WrapPanel x:Name="actionsPanel" HorizontalAlignment="Stretch"/>
+            </Border>
+
+            <!-- Images Section (Conditional) -->
+            <TextBlock Style="{StaticResource SectionLabelStyle}" 
+                       Text="Images:"
+                       Visibility="{Binding HasImages, Converter={StaticResource BoolToVis}}"/>
+            <Border Style="{StaticResource DynamicPanelStyle}"
+                    Visibility="{Binding HasImages, Converter={StaticResource BoolToVis}}">
+                <StackPanel x:Name="imagesPanel" HorizontalAlignment="Stretch"/>
+            </Border>
+
+        </StackPanel>
+    </Border>
+</UserControl>

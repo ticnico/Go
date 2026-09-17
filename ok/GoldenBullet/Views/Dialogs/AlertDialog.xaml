@@ -1,0 +1,165 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.AlertDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      KeyDown="PageKeyDown"
+      MinWidth="300"
+      Title="Alert"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <!-- Alert Card Style -->
+        <Style x:Key="AlertCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="24,20"/>
+            <Setter Property="Margin" Value="20"/>
+        </Style>
+
+        <!-- Alert Icon Style -->
+        <Style x:Key="AlertIconStyle" TargetType="iconPacks:PackIconOcticons">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+
+        </Style>
+
+        <!-- Alert Title Style -->
+        <Style x:Key="AlertTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Alert Message Style -->
+        <Style x:Key="AlertMessageStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="MaxWidth" Value="500"/>
+        </Style>
+
+        <!-- Alert Button Style -->
+        <Style x:Key="AlertButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="24,10"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF218838"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF19692C"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FF28A745" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1E7E34"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF155728"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Danger/Warning Variant -->
+        <Style x:Key="AlertDangerButtonStyle" TargetType="Button" BasedOn="{StaticResource AlertButtonStyle}">
+            <Setter Property="Background" Value="#FFDC3545"/>
+            <Setter Property="BorderBrush" Value="#FFBD2130"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFC82333"/>
+                    <Setter Property="BorderBrush" Value="#FF9E1B27"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FFBD2130"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Warning Variant -->
+        <Style x:Key="AlertWarningButtonStyle" TargetType="Button" BasedOn="{StaticResource AlertButtonStyle}">
+            <Setter Property="Background" Value="#FFFD7E14"/>
+            <Setter Property="BorderBrush" Value="#FFD65B00"/>
+            <Setter Property="Foreground" Value="#FF1E1E1E"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFE66A00"/>
+                    <Setter Property="BorderBrush" Value="#FFB85400"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FFD65B00"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <!-- Centered Alert Container -->
+    <Grid Background="#FF1E1E1E">
+        <Border Style="{StaticResource AlertCardStyle}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="360">
+
+            <StackPanel HorizontalAlignment="Center">
+
+                <!-- Alert Icon (dynamic via code-behind) -->
+                <iconPacks:PackIconOcticons x:Name="icon"
+                                            Style="{StaticResource AlertIconStyle}"
+                                            Kind="Check"
+                                            Foreground="#FF28A745"/>
+
+                <!-- Alert Title (dynamic via code-behind) -->
+                <TextBlock x:Name="title"
+                           Style="{StaticResource AlertTitleStyle}"
+                           Text="Success"/>
+
+                <!-- Alert Message (dynamic via code-behind) -->
+                <TextBlock x:Name="message"
+                           Style="{StaticResource AlertMessageStyle}"
+                           Text="Operation completed successfully."/>
+
+                <!-- Action Button (dynamic via code-behind) -->
+                <Button x:Name="okButton"
+                        Click="Ok"
+                        Style="{StaticResource AlertButtonStyle}">
+                    <TextBlock Text="OK" VerticalAlignment="Center"/>
+                </Button>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

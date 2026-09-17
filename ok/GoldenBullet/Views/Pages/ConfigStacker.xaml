@@ -1,0 +1,373 @@
+<Page x:Class="GoldenBullet.Views.Pages.ConfigStacker"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:converters="clr-namespace:GoldenBullet.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      KeyDown="PageKeyDown"
+      Title="Config Stacker"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <converters:BoolToThicknessConverter x:Key="BoolToThick" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Compact Block Item Style - UPDATED WITH SELECTION FX -->
+        <Style x:Key="BlockItemStyle" TargetType="Border">
+            <!-- Default State -->
+            <Setter Property="Background" Value="{Binding BackgroundColor, TargetNullValue=#FF2D2D2D}"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <!-- Smooth transitions for properties -->
+            <Style.Triggers>
+                <!-- Hover Effect -->
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#60D19900"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#D19900" BlurRadius="6" ShadowDepth="0" Opacity="0.3"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+                <!-- SELECTED EFFECT (Triggered when BorderThickness > 1 via Converter) -->
+                <Trigger Property="BorderThickness" Value="2">
+                    <!-- Highlight Background -->
+                    <Setter Property="Background" Value="#FF3E3E3E"/>
+                    <!-- Strong Gold Border -->
+                    <Setter Property="BorderBrush" Value="#FFD19900"/>
+                    <!-- Intense Glow -->
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#FFD19900" 
+                                          BlurRadius="15" 
+                                          ShadowDepth="0" 
+                                          Opacity="0.6"/>
+                        </Setter.Value>
+                    </Setter>
+                    <!-- Slight Pop Scale -->
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                </Trigger>
+
+                <!-- Ensure hover still works nicely even when selected -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                        <Condition Property="BorderThickness" Value="2"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" Value="#FF4A4A4A"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Compact Block Label Style -->
+        <Style x:Key="BlockLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Compact Toolbar Button Style -->
+        <Style x:Key="StackerToolbarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="2000"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#40D19900"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#D19900" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1E1E1E"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF005A9E"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Action Button Variants (Compact) -->
+        <Style x:Key="BtnAddStyle" TargetType="Button" BasedOn="{StaticResource StackerToolbarButtonStyle}">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="ToolTip" Value="Add block (Ctrl+A)"/>
+        </Style>
+        <Style x:Key="BtnRemoveStyle" TargetType="Button" BasedOn="{StaticResource StackerToolbarButtonStyle}">
+            <Setter Property="Background" Value="#FFDC3545"/>
+            <Setter Property="BorderBrush" Value="#FFBD2130"/>
+            <Setter Property="ToolTip" Value="Remove block (Del)"/>
+        </Style>
+        <Style x:Key="BtnMoveStyle" TargetType="Button" BasedOn="{StaticResource StackerToolbarButtonStyle}">
+            <Setter Property="ToolTip" Value="Move block"/>
+        </Style>
+        <Style x:Key="BtnActionStyle" TargetType="Button" BasedOn="{StaticResource StackerToolbarButtonStyle}">
+            <Setter Property="ToolTip" Value="Block action"/>
+        </Style>
+    </Page.Resources>
+
+    <!-- Main Grid - Zero outer margin for Frame embedding -->
+    <Grid Background="#FF1E1E1E" Margin="3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="175" MinWidth="175" MaxWidth="200"/>
+            <ColumnDefinition Width="4"/>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ==================== LEFT PANEL: BLOCK STACK ==================== -->
+        <Border Grid.Column="0" 
+                Background="#FF252525" 
+                BorderBrush="#40D19900" 
+                BorderThickness="1" 
+                CornerRadius="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <!-- Header -->
+                    <RowDefinition Height="auto"/>
+                    <!-- Toolbar -->
+                    <RowDefinition Height="*"/>
+                    <!-- Block List -->
+                </Grid.RowDefinitions>
+
+                <!-- Compact Header -->
+                <Border Grid.Row="0" 
+                        Background="#FF1E1E1E" 
+                        Padding="10,8" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,0,0,1" 
+                        CornerRadius="1,1,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Layers" 
+                                                    Width="16" Height="16" 
+                                                    Foreground="#D19900" 
+                                                    Margin="0,0,8,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Block Stack" 
+                                       FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+                        <TextBlock Text="Visual builder" Margin="10 3 0 0"
+                                       FontSize="9" Foreground="#FFAAAAAA"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Compact Toolbar -->
+                <Border Grid.Row="1" 
+                        Background="#FF1E1E1E" 
+                        Padding="2,2" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Click="AddBlock" Style="{StaticResource StyledSuccessButton}" Margin="3 0 2 0">
+                            <iconPacks:PackIconMaterialDesign Kind="Add" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="RemoveBlock" Style="{StaticResource StyledDangerButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconMaterial Kind="DeleteOutline" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="MoveBlockUp" Style="{StaticResource StyledPrimaryButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconUnicons Kind="ArrowUp" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="MoveBlockDown" Style="{StaticResource StyledPrimaryButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconUnicons Kind="ArrowDown" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="CloneBlock" Style="{StaticResource StyledPrimaryButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconFontAwesome Kind="CloneSolid" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="EnableDisableBlock" Style="{StaticResource StyledPrimaryButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconForkAwesome Kind="Ban" Width="9" Height="9"/>
+                        </Button>
+                        <Button Click="Undo" Style="{StaticResource StyledPrimaryButton}" Margin="0 0 2 0">
+                            <iconPacks:PackIconMicrons Kind="Undo" Width="9" Height="9"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- Scrollable Block List - Optimized -->
+                <ScrollViewer Grid.Row="2" 
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="6">
+                    <ItemsControl ItemsSource="{Binding Stack}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource BlockItemStyle}"
+                Tag="{Binding}"
+                MouseLeftButtonUp="SelectBlock"
+                BorderThickness="{Binding Selected, Converter={StaticResource BoolToThick}, ConverterParameter=2}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Block Label - Dynamic Foreground -->
+                                        <TextBlock Grid.Column="0" 
+                           Style="{StaticResource BlockLabelStyle}"
+                           Foreground="{Binding ForegroundColor}"
+                           Text="{Binding Label}"/>
+
+                                        <!-- Compact Status Dot -->
+                                        <Border Grid.Column="1" 
+                        Width="8" Height="8" 
+                        CornerRadius="4"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <!-- Default State: Gray (Disabled) or Category Color (Enabled) -->
+                                                    <Setter Property="Background" Value="#FF666666"/>
+                                                    <Setter Property="ToolTip" Value="Disabled"/>
+
+                                                    <Style.Triggers>
+                                                        <!-- Trigger 1: If Enabled, show Category Color -->
+                                                        <DataTrigger Binding="{Binding IsEnabled}" Value="True">
+                                                            <Setter Property="Background" Value="{Binding BackgroundColor}"/>
+                                                            <Setter Property="ToolTip" Value="Enabled"/>
+                                                        </DataTrigger>
+
+                                                        <!-- Trigger 2: If SELECTED, force Green regardless of Enabled state -->
+                                                        <DataTrigger Binding="{Binding Selected}" Value="True">
+                                                            <Setter Property="Background" Value="#FFF"/>
+                                                            <Setter Property="ToolTip" Value="Selected"/>
+                                                            <Setter Property="Effect">
+                                                                <Setter.Value>
+                                                                    <DropShadowEffect Color="#FFF" 
+                                                              BlurRadius="6" 
+                                                              ShadowDepth="0" 
+                                                              Opacity="0.8"/>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+        <!-- ==================== GRID SPLITTER (Compact) ==================== -->
+        <GridSplitter Grid.Column="1"
+                      Width="3"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Background="#FF2D2D2D"
+                      BorderThickness="1,0,1,0"
+                      Cursor="SizeWE">
+            <GridSplitter.Template>
+                <ControlTemplate TargetType="GridSplitter">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2">
+                        <Rectangle Width="1" Height="20" Fill="#FF3C3C3C" 
+                                   VerticalAlignment="Center" RadiusX="1" RadiusY="1"/>
+                    </Border>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter>
+
+        <!-- ==================== RIGHT PANEL: BLOCK CONFIG (RESIZABLE) ==================== -->
+        <Border Grid.Column="2" 
+                Background="#FF252525" 
+                BorderBrush="#40D19900" 
+                BorderThickness="1" 
+                CornerRadius="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <!-- Header -->
+                    <RowDefinition Height="*"/>
+                    <!-- Config Content -->
+                </Grid.RowDefinitions>
+
+                <!-- Compact Header -->
+                <Border Grid.Row="0" 
+                        Background="#FF1E1E1E" 
+                        Padding="10,8" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,0,0,1" 
+                        CornerRadius="1,1,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="CogOutline" 
+                                                    Width="16" Height="16" 
+                                                    Foreground="#D19900" 
+                                                    Margin="0,0,8,0"/>
+                        <StackPanel>
+                            <TextBlock Text="Block Config" 
+                                       FontSize="12" FontWeight="SemiBold" 
+                                       Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+                        <TextBlock Text="Properties" Margin="10 3 0 0"
+                                       FontSize="9" Foreground="#FFAAAAAA"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Config Content Area - STRETCHES with Splitter, No Horizontal Scroll -->
+                <ScrollViewer x:Name="blockInfo"
+                              Grid.Row="1"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto"
+                              Padding="8"
+                              Background="#FF1A1A1A"
+                              CanContentScroll="True"
+                              HorizontalContentAlignment="Stretch"
+                              VerticalContentAlignment="Top">
+                    <!-- Content loaded here will resize automatically with the column width -->
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

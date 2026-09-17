@@ -1,0 +1,249 @@
+<Page x:Class="GoldenBullet.Views.Pages.ConfigMetadata"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="Config Metadata"
+      Background="#FF1E1E1E"
+      MinWidth="900">
+
+    <Page.Resources>
+        <!-- Form Field Label Style -->
+        <Style x:Key="FormFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+
+        <!-- Primary Button Style -->
+        <Style x:Key="FormButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#40D19900"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#D19900" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1A1A1A"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF005A9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Success Button (Green) -->
+        <Style x:Key="FormSuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource FormButtonStyle}">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF218838"/>
+                    <Setter Property="BorderBrush" Value="#FF19692C"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#FF1E7E34"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Image Preview Card -->
+        <Style x:Key="ImagePreviewStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="140"/>
+            <Setter Property="Margin" Value="0,8,0,16"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#40D19900"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#D19900" BlurRadius="8" ShadowDepth="0" Opacity="0.3"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#FF1E1E1E" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <Border Grid.Row="0" Background="#FF252525" BorderBrush="#40D19900" BorderThickness="1" CornerRadius="8,8,0,0" Padding="20,15">
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="InformationOutline" Width="24" Height="24" Foreground="#D19900" Margin="0,0,12,0"/>
+                <StackPanel>
+                    <TextBlock Text="Config Metadata" FontSize="18" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                    <TextBlock Text="Edit configuration name, author, category, and icon" FontSize="11" Foreground="#FFAAAAAA"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Card -->
+        <Border Grid.Row="1" Background="#FF252525" BorderBrush="#40D19900" BorderThickness="1,0,1,1" CornerRadius="0,0,8,8" Padding="25,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Form Fields -->
+                <StackPanel Grid.Column="0" MaxWidth="450">
+
+                    <!-- Name Field -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Name:"/>
+                        <TextBox Style="{StaticResource RoundedTextBox}"
+                                 Text="{Binding Name}" 
+                                 Width="280"/>
+                    </StackPanel>
+
+                    <!-- Author Field -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Author:"/>
+                        <TextBox Style="{StaticResource RoundedTextBox}"
+                                 Text="{Binding Author}" 
+                                 Width="280"/>
+                    </StackPanel>
+
+                    <!-- Category Field -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,24" Height="32">
+                        <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Category:"/>
+                        <ComboBox x:Name="categoryCombobox"
+          Style="{StaticResource RoundedComboBoxArow}" Margin="0 0 0 0"
+          Width="281"
+          IsEditable="True"
+          Text="{Binding Category, UpdateSourceTrigger=PropertyChanged}"
+          KeyDown="TextboxKeyDown"
+          ToolTip="Enter or select a category" Height="30"/>
+                    </StackPanel>
+
+                    <!-- Icon Section Header -->
+                    <TextBlock Text="Icon" FontSize="13" FontWeight="SemiBold" Foreground="#FFE0E0E0" Margin="0,0,0,12"/>
+                    <TextBlock Text="Upload or download a 150x150 image to represent this config" 
+                               Foreground="#FFAAAAAA" FontSize="11" Margin="0,0,0,16" TextWrapping="Wrap"/>
+
+                    <!-- Upload from Disk -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Click="OpenIcon" Style="{StaticResource FormButtonStyle}" Width="140">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconForkAwesome Kind="FolderOpen" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <TextBlock Text="Browse..." VerticalAlignment="Center" Margin="6,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <TextBlock Text="Select image from disk" Foreground="#FF666666" FontSize="11" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Download from URL -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="urlTextbox" 
+                                 Grid.Column="0"
+                                 Style="{StaticResource RoundedTextBox}"
+                                 Margin="0,0,8,0"
+                                 Height="34"
+                                 VerticalContentAlignment="Center"/>
+
+                        <Button x:Name="downloadButton" 
+                                Grid.Column="1"
+                                Click="DownloadIcon" 
+                                Style="{StaticResource FormSuccessButtonStyle}"
+                                Width="110">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconForkAwesome Kind="CloudDownload" Width="14" Height="14" VerticalAlignment="Center"/>
+                                <TextBlock Text="Download" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                    <TextBlock Text="Enter URL and click Download" Foreground="#FF666666" FontSize="10" FontStyle="Italic"/>
+                </StackPanel>
+
+                <!-- Right: Image Preview -->
+                <Border Grid.Column="1" 
+                        VerticalAlignment="Top"
+                        Margin="40,145,0,0">
+                    <Grid>
+                        <!-- Actual image -->
+                        <Image Source="{Binding Icon}"
+                               Width="140" Height="140"
+                               Stretch="Uniform"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Footer Action Bar -->
+        <Border Grid.Row="2" Background="#FF252525" BorderBrush="#40D19900" BorderThickness="1" CornerRadius="8" Padding="15,12" Margin="0,15,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="Metadata changes are saved with the config file" 
+                           Foreground="#FF666666" FontSize="11" VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Click="Cancel_Click" Style="{StaticResource FormButtonStyle}" Width="90">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"/>
+                            <TextBlock Text="Cancel" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="Save_Click" Style="{StaticResource FormSuccessButtonStyle}" Width="90">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconRemixIcon Kind="Save3Fill" Width="14" Height="14"/>
+                            <TextBlock Text="Save" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

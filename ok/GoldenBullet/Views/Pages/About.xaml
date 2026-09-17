@@ -1,0 +1,267 @@
+<Page x:Class="GoldenBullet.Views.Pages.About"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="670" d:DesignWidth="1100"
+      Title="About"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Main Card Style -->
+        <Style x:Key="AboutCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20,5"/>
+            <Setter Property="Margin" Value="20,20"/>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFD700"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,20,0,10"/>
+        </Style>
+
+        <!-- Normal Text Style -->
+        <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
+        </Style>
+
+        <!-- Warning Box Style -->
+        <Style x:Key="WarningBoxStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#FFDC3545"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="0,15,0,15"/>
+        </Style>
+
+        <!-- Credit Item Style -->
+        <Style x:Key="CreditItemStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="CreditLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="CreditValueStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Action Button Base Style (Matches Home Page) -->
+        <Style x:Key="AboutActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="MinWidth" Value="140"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FFD700"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FFD700" BlurRadius="10" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1A1A1A"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF005A9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Specific Button Colors -->
+        <Style x:Key="BtnLicense" TargetType="Button" BasedOn="{StaticResource AboutActionButtonStyle}">
+            <Setter Property="Background" Value="#005A9E"/>
+            <Setter Property="BorderBrush" Value="#FF005A9E"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="BtnDonate" TargetType="Button" BasedOn="{StaticResource AboutActionButtonStyle}">
+            <Setter Property="Background" Value="#FFFD7E14"/>
+            <Setter Property="BorderBrush" Value="#FFD65B00"/>
+            <Setter Property="Foreground" Value="#FF1E1E1E"/>
+        </Style>
+        <Style x:Key="BtnRepo" TargetType="Button" BasedOn="{StaticResource AboutActionButtonStyle}">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="BtnForum" TargetType="Button" BasedOn="{StaticResource AboutActionButtonStyle}">
+            <Setter Property="Background" Value="#FF6F42C1"/>
+            <Setter Property="BorderBrush" Value="#FF5A32A3"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="BtnTelegram" TargetType="Button" BasedOn="{StaticResource AboutActionButtonStyle}">
+            <Setter Property="Background" Value="#FF0088CC"/>
+            <Setter Property="BorderBrush" Value="#FF006699"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#FF1E1E1E">
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel HorizontalAlignment="Center">
+
+                <!-- Main Card -->
+                <Border Style="{StaticResource AboutCardStyle}" Height="550">
+                    <StackPanel>
+
+                        <!-- Header Icon & Title -->
+                        <Image Source="/Images/logohk.png"
+                                                    Width="100" Height="100" 
+                               Margin="0 20 0 20"
+                                                    HorizontalAlignment="Center"/>
+
+                        <TextBlock Text="About GoldenBullet" 
+                                   FontSize="24" FontWeight="Bold" 
+                                   Foreground="#FFE0E0E0" 
+                                   TextAlignment="Center" 
+                                   Margin="0,0,0,10"/>
+
+                        <TextBlock Text="Native Client" 
+                                   FontSize="14" Foreground="#FFAAAAAA" 
+                                   TextAlignment="Center" 
+                                   Margin="0,0,0,25"/>
+
+                        <!-- Description -->
+                        <TextBlock Style="{StaticResource BodyTextStyle}" TextAlignment="Center">
+                            <Italic>GoldenBullet</Italic> is an automation suite powered by .NET core. It allows performing requests towards a target webapp and offers a lot of tools to work with the results. This software can be used for <Bold Foreground="#FFD700">scraping</Bold>, <Bold Foreground="#FFD700">parsing</Bold> data, automated <Bold Foreground="#FFD700">pentesting</Bold> and much more.
+                        </TextBlock>
+
+                        <!-- Warning Box -->
+                        <Border Style="{StaticResource WarningBoxStyle}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <iconPacks:PackIconMaterial Kind="AlertCircle" 
+                                                                Width="20" Height="20" 
+                                                                Foreground="#FFDC3545" 
+                                                                Margin="0,0,8,0"/>
+                                    <TextBlock Text="IMPORTANT LEGAL NOTICE" 
+                                               Foreground="#FFDC3545" 
+                                               FontWeight="Bold" 
+                                               FontSize="13"/>
+                                </StackPanel>
+                                <TextBlock Style="{StaticResource BodyTextStyle}" Foreground="#FFE0E0E0">
+                                    Performing (D)DoS attacks or credential stuffing on sites you do not own (or do not have permission to test) is <Bold Foreground="#FFDC3545">illegal</Bold>! The developer will not be held responsible for improper use of this software.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Credits Section -->
+                        <StackPanel Margin="0,10,0,0">
+
+                            <!-- Developer -->
+                            <StackPanel Style="{StaticResource CreditItemStyle}">
+                                <TextBlock Style="{StaticResource CreditLabelStyle}" Text="Developer:"/>
+                                <StackPanel Style="{StaticResource CreditValueStyle}">
+                                    <TextBlock Text="TicnicO" Foreground="#FF4D90FE" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" Margin="-30 0 0 0"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            
+
+                                                    </StackPanel>
+
+                        <!-- Footer License Note -->
+                        <Border Background="#FF2D2D2D" CornerRadius="6" Padding="15" Margin="0,25,0,0">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <iconPacks:PackIconMaterial Kind="License" Width="18" Height="18" Foreground="#FF28A745" Margin="0,0,10,0"/>
+                                <TextBlock Style="{StaticResource BodyTextStyle}" TextAlignment="Left">
+                                    This software is licensed under the <Bold>MIT license</Bold>. Please visit the Telegram using the button below.
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Buttons Row -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,40">
+                    <Button x:Name="licenseButton" Click="OpenLicense" Style="{StaticResource BtnLicense}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconBootstrapIcons Kind="TextParagraph" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="License" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="donateButton" Click="OpenDonation" Style="{StaticResource BtnDonate}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconRemixIcon Kind="MoneyDollarBoxFill" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Buy" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="repoButton" Click="OpenRepository" Style="{StaticResource BtnRepo}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconSimpleIcons Kind="Git" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Repository" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="forumButton" Click="OpenForum" Style="{StaticResource BtnForum}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconForkAwesome Kind="Users" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Forum" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="issuesButton" Click="OpenIssues" Style="{StaticResource StyledSuccessButton}" Width="118">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconForkAwesome Kind="Whatsapp" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="WhatsApp" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="Telegramd" Click="Telegram" Style="{StaticResource StyledEditButton}" Width="118" Margin="12 0 0 0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconForkAwesome Kind="Telegram" Width="16" Height="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Telegram" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

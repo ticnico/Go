@@ -1,0 +1,177 @@
+
+        <Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <ApplicationIcon>logo.ico</ApplicationIcon>
+        <RootNamespace>GoldenBullet</RootNamespace>
+        <AssemblyName>GoldenBullet</AssemblyName>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>MyKey.snk</AssemblyOriginatorKeyFile>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+
+        <!-- ✅ NetBeauty: Specify libraries folder -->
+        <NetBeautyLibsDir>libraries</NetBeautyLibsDir>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- ✅ NetBeauty Settings - FIXED -->
+        <DisableBeauty>False</DisableBeauty>
+        <BeautySharedRuntimeMode>False</BeautySharedRuntimeMode>
+
+        <!-- ⚠️ CHANGE THIS: False for build, True only for publish -->
+        <BeautyOnPublishOnly>False</BeautyOnPublishOnly>
+
+        <BeautyNoRuntimeInfo>False</BeautyNoRuntimeInfo>
+        <BeautyUsePatch>True</BeautyUsePatch>
+        <BeautyLogLevel>Info</BeautyLogLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Views\Pages\Cookies\**" />
+      <EmbeddedResource Remove="Views\Pages\Cookies\**" />
+      <None Remove="Views\Pages\Cookies\**" />
+      <Page Remove="Views\Pages\Cookies\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Views\Pages\ProxyCheckerPage.xaml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="appsettings.json" />
+        <None Remove="Images\cider.gif" />
+        <None Remove="Images\fairy.gif" />
+        <None Remove="Images\ffaez.gif" />
+        <None Remove="Images\james.gif" />
+        <None Remove="Images\laiteux.gif" />
+        <None Remove="Images\logohk.png" />
+        <None Remove="Images\logohq.png" />
+        <None Remove="Images\logohq_square_padded.png" />
+        <None Remove="Images\logohq_square_padded_bg.png" />
+        <None Remove="Images\mastercho.gif" />
+        <None Remove="Images\meinname.gif" />
+        <None Remove="Images\sjw.gif" />
+        <None Remove="Images\thefiendqq.gif" />
+        <None Remove="Sounds\hit.wav" />
+        <None Remove="user-agents.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Remove="Views\Pages\ProxyCheckerPage.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <Content Include="Sounds\hit.wav">
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="user-agents.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Acornima" Version="1.6.2" />
+        <PackageReference Include="AngleSharp" Version="1.4.0" />
+        <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+        <PackageReference Include="DeviceId" Version="6.11.0" />
+        <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
+        <PackageReference Include="JWT" Version="11.0.0" />
+        <PackageReference Include="MahApps.Metro" Version="2.4.11" />
+        <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
+        <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome" Version="6.2.1" />
+        <PackageReference Include="MahApps.Metro.SimpleChildWindow" Version="2.2.1" />
+        <PackageReference Include="Markdig" Version="1.1.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+        <PackageReference Include="MimeKit" Version="4.16.0" />
+
+        <!-- ✅ NetBeauty: Version moved to Directory.Packages.props -->
+        <PackageReference Include="nulastudio.NetBeauty" Version="2.1.5" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" />
+        <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+        <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+        <!-- ✅ LICENSING PACKAGES -->
+    </ItemGroup>
+            
+        <ItemGroup>
+        <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-j92c-7v7g-gj3f" />
+    </ItemGroup>
+            
+            
+
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Core.csproj" />
+        <ProjectReference Include="..\RuriLib.Http\RuriLib.Http.csproj" />
+        
+    </ItemGroup>
+            
+            
+    <ItemGroup Condition="'$(RuntimeIdentifier)' != ''">
+        <CurlImpersonateNativeAsset Include="..\RuriLib.Http\runtimes\$(RuntimeIdentifier)\native\**\*" />
+        <Content Include="@(CurlImpersonateNativeAsset)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" TargetPath="runtimes\$(RuntimeIdentifier)\native\%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+            
+    <Target Name="EnsureCurlImpersonateNativeAssets" BeforeTargets="Publish" Condition="'$(RuntimeIdentifier)' != '' and '@(CurlImpersonateNativeAsset)' == ''">
+        <Error Text="curl-impersonate native assets for $(RuntimeIdentifier) were not found. Run 'dotnet run --project Tools/CurlImpersonate.NativeAssets -- --rid $(RuntimeIdentifier)' before publishing." />
+    </Target>
+
+    <ItemGroup>
+        <Resource Include="Images\logohk.png">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="dbip-country-lite.mmdb">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\CSharp.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\JavaScript.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\LoliCode.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\LoliScript.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\MarkDown.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="Highlighting\Python.xshd">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="version.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Styles\" />
+    </ItemGroup>
+</Project>

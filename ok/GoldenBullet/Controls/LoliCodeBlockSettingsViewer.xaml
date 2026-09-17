@@ -1,0 +1,34 @@
+<UserControl x:Class="GoldenBullet.Controls.LoliCodeBlockSettingsViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoldenBullet.Controls"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="800"
+             Background="Transparent">
+
+    <Grid Margin="5 -10 8 0">
+        <!-- Editor Container - Preserves exact layout positioning with visual polish -->
+        <Border Background="#FF252525" 
+                BorderBrush="#80D19900" 
+                BorderThickness="1" 
+                CornerRadius="4"
+                Margin="0 10 0 0">
+            <avalonEdit:TextEditor
+                VerticalAlignment="Stretch"
+                x:Name="editor"
+                FontFamily="Consolas"
+                FontSize="10pt"
+                Foreground="#FFE0E0E0"
+                Background="#FF2D2D2D"
+                LostFocus="EditorLostFocus"
+                TextChanged="EditorTextChanged"
+                HorizontalAlignment="Stretch"
+                ShowLineNumbers="True"
+                MaxWidth="{Binding ActualWidth, ElementName=dockParent}"
+                MaxHeight="{Binding ActualHeight, ElementName=dockParent}"/>
+        </Border>
+    </Grid>
+</UserControl>

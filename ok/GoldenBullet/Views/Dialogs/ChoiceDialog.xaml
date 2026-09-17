@@ -1,0 +1,111 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.ChoiceDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      MinWidth="300"
+      Title="Confirm Action"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <!-- Dialog Card Style -->
+        <Style x:Key="ChoiceCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="24,20"/>
+            <Setter Property="Margin" Value="20"/>
+        </Style>
+
+        <!-- Alert Icon Style -->
+        <Style x:Key="ChoiceIconStyle" TargetType="iconPacks:PackIconOcticons">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Dialog Title Style -->
+        <Style x:Key="ChoiceTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Dialog Message Style -->
+        <Style x:Key="ChoiceMessageStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,24"/>
+            <Setter Property="MaxWidth" Value="500"/>
+        </Style>
+    </Page.Resources>
+
+    <!-- Centered Dialog Container -->
+    <Grid Background="#FF1E1E1E">
+        <Border Style="{StaticResource ChoiceCardStyle}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="380">
+
+            <StackPanel HorizontalAlignment="Center">
+
+                <!-- Alert Icon (dynamic via code-behind) -->
+                <iconPacks:PackIconOcticons x:Name="icon"
+                                            Style="{StaticResource ChoiceIconStyle}"
+                                            Kind="Alert"
+                                            Foreground="#FFFD7E14"/>
+
+                <!-- Dialog Title (dynamic via code-behind) -->
+                <TextBlock x:Name="title"
+                           Style="{StaticResource ChoiceTitleStyle}"
+                           Text="Confirm Action"/>
+
+                <!-- Dialog Message (dynamic via code-behind) -->
+                <TextBlock x:Name="message"
+                           Style="{StaticResource ChoiceMessageStyle}"
+                           Text="Are you sure you want to proceed with this action?"/>
+
+                <!-- Action Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Click="Yes" 
+                            x:Name="yesButton" Width="70"
+                            Style="{StaticResource StyledSuccessButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconOcticons Kind="Check" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="yesButtonText"
+                                       Text="Yes" 
+                                       VerticalAlignment="Center" 
+                                       Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="No" 
+                            x:Name="noButton"
+                            Width="70"
+                            Style="{StaticResource StyledDangerButton}"
+                            Margin="10 0 0 0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconOcticons Kind="X" Width="14" Height="14" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="noButtonText"
+                                       Text="No" 
+                                       VerticalAlignment="Center" 
+                                       Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

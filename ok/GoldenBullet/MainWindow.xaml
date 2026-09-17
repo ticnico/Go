@@ -1,0 +1,452 @@
+<mah:MetroWindow x:Class="GoldenBullet.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/fexpression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GoldenBullet"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="GoldenBullet" Height="720" Width="1330"
+        Background="#FF1E1E1E"
+        BorderThickness="0"
+        GlowBrush="#ffd700"
+        WindowTitleBrush="#FF252525"
+        WindowTransitionsEnabled="False"
+        TitleCharacterCasing="Normal"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        ShowTitleBar="True"
+        ShowMinButton="True"
+        ShowMaxRestoreButton="True"
+        ShowCloseButton="True"
+        TitleAlignment="Left"
+        TextElement.FontFamily="Segoe UI"
+        TextElement.FontWeight="Regular"
+        Loaded="MetroWindow_Loaded">
+
+    <mah:MetroWindow.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <Style x:Key="SidebarButton" TargetType="ToggleButton">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="6,2"/>
+            <!-- Unselected text/icon color (made lighter for readability) -->
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="border" 
+                        Background="{TemplateBinding Background}" 
+                        CornerRadius="4"
+                        Margin="4,0">
+                            <Grid TextElement.Foreground="{TemplateBinding Foreground}">
+                                <!-- Selected Indicator Bar -->
+                                <Rectangle x:Name="activeIndicator" 
+                                   Width="3" 
+                                   Height="16" 
+                                   Fill="#D19900" 
+                                   RadiusX="1.5" 
+                                   RadiusY="1.5"
+                                   HorizontalAlignment="Left" 
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed"/>
+
+                                <!-- Button Content (Icon + Text) -->
+                                <ContentPresenter x:Name="contentPresenter" 
+                                          Margin="12,0" 
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF2D2D2D"/>
+                                <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF3C3C3C"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF2D2D2D"/>
+                                <!-- CHANGE THIS COLOR TO WHATEVER YOU WANT FOR SELECTED STATE -->
+                                <Setter Property="Foreground" Value="#D19900"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter TargetName="activeIndicator" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SidebarSubButton" TargetType="ToggleButton" BasedOn="{StaticResource SidebarButton}">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontSize" Value="12"/>
+            <!-- Unselected sub-item text/icon color -->
+            <Setter Property="Foreground" Value="#D19900"/>
+            <Setter Property="Margin" Value="26,1"/>
+        </Style>
+
+        <Style x:Key="PanelHeaderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#80D19900"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Padding" Value="15,12"/>
+            <Setter Property="CornerRadius" Value="8,8,0,0"/>
+        </Style>
+
+        <Style x:Key="ContentCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#80D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Ensure PackIconMaterial inherits Foreground from containing ToggleButton -->
+        <Style TargetType="iconPacks:PackIconMaterial">
+            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ToggleButton}}" />
+        </Style>
+    </mah:MetroWindow.Resources>
+
+    <mah:MetroWindow.RightWindowCommands>
+        <mah:WindowCommands>
+            <Button x:Name="BtnActivationStatus" 
+                    Click="BtnActivationStatus_Click" 
+                    ToolTip="License Status">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial x:Name="IconActivation" 
+                                                Kind="LockOutline" 
+                                                Width="16" Height="16" 
+                                                Margin="0,0,5,0"/>
+                    <TextBlock x:Name="TxtActivationStatus" 
+                               Text="Trial" 
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.RightWindowCommands>
+
+    <Grid Background="#FF1E1E1E">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="195"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#FF252525">
+            <Grid.Resources>
+                <!-- Sidebar-local TextBlock style: default unselected color, turns gold when its ToggleButton ancestor is checked -->
+                <Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                            <Setter Property="Foreground" Value="#D19900"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+
+                <!-- Sidebar-local PackIconMaterial style: follow ToggleButton checked state -->
+                <Style TargetType="iconPacks:PackIconMaterial">
+                    <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=ToggleButton}}" Value="True">
+                            <Setter Property="Foreground" Value="#D19900"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Style="{StaticResource PanelHeaderStyle}" BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border CornerRadius="4" Width="50" Height="50">
+                        <Image Source="/Images/logohk.png" Width="50" Height="50" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="GoldenBullet" FontSize="16" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                        <TextBlock Text="Native Client" FontSize="10" Foreground="#FFAAAAAA"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          Background="#FF252525"
+                          Padding="0,10,0,20">
+
+                <StackPanel x:Name="SidebarStackPanel">
+
+                    <TextBlock Text="MAIN" FontSize="10" FontWeight="SemiBold" Foreground="#FF555555" Margin="14,10,0,5"/>
+
+                    <ToggleButton x:Name="HomeButton" Style="{StaticResource SidebarButton}" Click="OpenHomePage" Tag="Main" IsChecked="True">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="HomeOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Home" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="JobsButton" Style="{StaticResource SidebarButton}" Click="OpenJobsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="LightningBolt" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Jobs" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <Grid Margin="6,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Main Tools ToggleButton -->
+                        <ToggleButton x:Name="ToolsMainButton"
+                  Grid.Column="0"
+                  Style="{StaticResource SidebarButton}"
+                  Click="ToolsMainButton_Click" 
+                  Tag="Main" 
+                  Margin="0,2,0,2" Grid.ColumnSpan="2">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="ToolboxOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                                <TextBlock Text="Tools" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!-- Arrow Button (separated in its own column) -->
+                        <Button Grid.Column="1"
+            Click="ToolsArrow_Click"
+            Background="Transparent"
+            BorderThickness="0"
+            Focusable="False"
+            FocusVisualStyle="{x:Null}"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center"
+            Width="24" Height="24" 
+            Cursor="Hand"
+            Foreground="#FFAAAAAA"
+            Margin="0,0,6,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <iconPacks:PackIconMaterial x:Name="ToolsArrow" Kind="ChevronDown" Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Transparent"/>
+                        </Button>
+                    </Grid>
+
+                    <StackPanel x:Name="ToolsSubStackPanel" Visibility="Collapsed">
+                        <ToggleButton x:Name="NetflixCookieButton" Style="{StaticResource SidebarSubButton}" Click="OpenNetflixCookiePage" Tag="NetflixCookie">
+                            <TextBlock Text="Netflix Cookie"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="NFTokenChecker" Style="{StaticResource SidebarSubButton}" Click="OpenNFTokenCheckerPage" Tag="NFTokenChecker">
+                            <TextBlock Text="NFTokenChecker"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="UlpToComboButton" Style="{StaticResource SidebarSubButton}" Click="OpenUlpToComboPage" Tag="UlpToCombo">
+                            <TextBlock Text="ULP to Combo"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="KeywordRemoverButton" Style="{StaticResource SidebarSubButton}" Click="OpenKeywordRemoverPage" Tag="KeywordRemover">
+                            <TextBlock Text="Keyword Remover"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ProxyCheckerButton" Style="{StaticResource SidebarSubButton}" Click="OpenProxyCheckerPage" Tag="ProxyChecker">
+                            <TextBlock Text="Proxy Checker"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="LogsToUlpButton" Style="{StaticResource SidebarSubButton}" Click="OpenLogsToUlpPage" Tag="LogsToUlp">
+                            <TextBlock Text="Logs to ULP"/>
+                        </ToggleButton>
+                        <!-- ✅ ADD THIS NEW BUTTON -->
+                        <ToggleButton x:Name="SiteScannerButton" Style="{StaticResource SidebarSubButton}" Click="OpenSiteScannerPage" Tag="SiteScanner">
+                            <TextBlock Text="Site Scanner"/>
+                        </ToggleButton>
+                    </StackPanel>
+
+                    <ToggleButton x:Name="ProxiesButton" Style="{StaticResource SidebarButton}" Click="OpenProxiesPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Database" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Proxies" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="WordlistsButton" Style="{StaticResource SidebarButton}" Click="OpenWordlistsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="FileMultipleOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Wordlists" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <Grid Margin="6,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Main Configs ToggleButton -->
+                        <ToggleButton x:Name="ConfigsMainButton"
+                  Grid.Column="0"
+                  Style="{StaticResource SidebarButton}"
+                  Click="ConfigsMainButton_Click" 
+                  Tag="Main" 
+                  Margin="0,2,0,2" Grid.ColumnSpan="2">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="CodeBraces" Width="18" Height="18" Margin="0,0,10,0"/>
+                                <TextBlock Text="Configs" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ToggleButton>
+
+                        <!-- Arrow Button (separated in its own column) -->
+                        <Button Grid.Column="1"
+            Click="ConfigsArrow_Click"
+            Background="Transparent"
+            BorderThickness="0"
+            Focusable="False"
+            FocusVisualStyle="{x:Null}"
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center"
+            Width="24" Height="24" 
+            Cursor="Hand"
+            Foreground="#FFAAAAAA"
+            Margin="0,0,6,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <iconPacks:PackIconMaterial x:Name="ConfigsArrow" Kind="ChevronDown" Width="14" Height="14" Background="Transparent"/>
+                        </Button>
+                    </Grid>
+
+                    <StackPanel x:Name="ConfigsSubStackPanel" Visibility="Collapsed">
+                        <ToggleButton x:Name="MetadataButton" Style="{StaticResource SidebarSubButton}" Click="OpenMetadataPage" Tag="ConfigMetadata">
+                            <TextBlock Text="Metadata"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ReadmeButton" Style="{StaticResource SidebarSubButton}" Click="OpenReadmePage" Tag="ConfigReadme">
+                            <TextBlock Text="Readme"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="StackerButton" Style="{StaticResource SidebarSubButton}" Click="OpenStackerPage" Tag="ConfigStacker">
+                            <TextBlock Text="Stacker"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="LoliCodeButton" Style="{StaticResource SidebarSubButton}" Click="OpenLoliCodePage" Tag="ConfigLoliCode">
+                            <TextBlock Text="LoliCode"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ConfigSettingsButton" Style="{StaticResource SidebarSubButton}" Click="OpenConfigSettingsPage" Tag="ConfigSettings">
+                            <TextBlock Text="Settings"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="CSharpCodeButton" Style="{StaticResource SidebarSubButton}" Click="OpenCSharpCodePage" Tag="ConfigCSharpCode">
+                            <TextBlock Text="C# Code"/>
+                        </ToggleButton>
+                        <ToggleButton x:Name="LoliScriptButton" Style="{StaticResource SidebarSubButton}" Click="OpenLoliScriptPage" Tag="ConfigLoliScript">
+                            <TextBlock Text="LoliScript"/>
+                        </ToggleButton>
+                    </StackPanel>
+
+                    <TextBlock Text="SYSTEM" FontSize="10" FontWeight="SemiBold" Foreground="#FF555555" Margin="14,15,0,5"/>
+
+                    <ToggleButton x:Name="HitsButton" Style="{StaticResource SidebarButton}" Click="OpenHitsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Target" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Hits" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="PluginsButton" Style="{StaticResource SidebarButton}" Click="OpenPluginsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="PuzzleOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Plugins" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="ActivationButton"
+                                  Style="{StaticResource SidebarButton}" 
+                                  Click="ActivationButton_Click" 
+                                  Tag="Main"
+                                  Visibility="Collapsed" >
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="KeyOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="Activation" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="GBSettingsButton" Style="{StaticResource SidebarButton}" Click="OpenGBSettingsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="CogOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="GB Settings" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="RLSettingsButton" Style="{StaticResource SidebarButton}" Click="OpenRLSettingsPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="CogOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="RL Settings" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                    <ToggleButton x:Name="AboutButton" Style="{StaticResource SidebarButton}" Click="OpenAboutPage" Tag="Main">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="InformationOutline" Width="18" Height="18" Margin="0,0,10,0"/>
+                            <TextBlock Text="About" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ToggleButton>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <Border Grid.Column="1" 
+                Style="{StaticResource ContentCardStyle}" 
+                Margin="15,15,15,15">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border x:Name="TrialBanner"
+                        Grid.Row="0"
+                        Background="#FFF8E1"
+                        BorderBrush="#40D19900"
+                        BorderThickness="1"
+                        CornerRadius="8,8,0,0"
+                        Padding="15"
+                        Margin="0,0,0,0"
+                        Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="⚠️" FontSize="20" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="TRIAL MODE" FontWeight="Bold" FontSize="14" Foreground="#FF6D4C00"/>
+                            <TextBlock Text="Some features may be limited. Activate your license to unlock full functionality."
+                                       TextWrapping="Wrap"
+                                       FontSize="12"
+                                       Foreground="#FF6D4C00"/>
+                        </StackPanel>
+                        <Button Grid.Column="2" 
+                                Content="Activate Now" 
+                                Click="ActivationButton_Click"
+                                Padding="15,8"
+                                Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
+                    </Grid>
+                </Border>
+
+                <Frame x:Name="mainFrame" 
+                       Grid.Row="1"
+                       NavigationUIVisibility="Hidden"
+                       Background="#FF1E1E1E"/>
+            </Grid>
+        </Border>
+    </Grid>
+</mah:MetroWindow>

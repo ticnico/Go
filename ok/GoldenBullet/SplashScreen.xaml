@@ -1,0 +1,242 @@
+<Window x:Class="GoldenBullet.SplashScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="GoldenBullet - Loading" 
+        Height="400" 
+        Width="600"
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen" 
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <Window.Resources>
+        <!-- Animated Glow Effect -->
+        <Storyboard x:Key="GlowAnimation" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="GlowEffect" 
+                           Storyboard.TargetProperty="Opacity"
+                           From="0.3" To="0.8" Duration="0:0:2" AutoReverse="True"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource GlowAnimation}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <!-- Main Container with Gradient Background -->
+    <Border CornerRadius="20" BorderThickness="2">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#1a1a1a" Offset="0.0"/>
+                <GradientStop Color="#2d2d30" Offset="0.5"/>
+                <GradientStop Color="#1a1a1a" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Border.BorderBrush>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FCBA00" Offset="0.0"/>
+                <GradientStop Color="#D19900" Offset="0.5"/>
+                <GradientStop Color="#FCBA00" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.BorderBrush>
+
+        <!-- Drop Shadow Effect -->
+        <Border.Effect>
+            <DropShadowEffect x:Name="GlowEffect" 
+                            Color="#FCBA00" 
+                            BlurRadius="30" 
+                            ShadowDepth="0" 
+                            Opacity="0.5"/>
+        </Border.Effect>
+
+        <Grid Margin="40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Logo/Icon Section -->
+
+            <!-- App Name -->
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="GOLDENBULLET" 
+                          FontSize="42" 
+                          FontWeight="Bold" 
+                          HorizontalAlignment="Center"
+                          FontFamily="Segoe UI">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#FCBA00" Offset="0.0"/>
+                            <GradientStop Color="#FFD700" Offset="0.5"/>
+                            <GradientStop Color="#FCBA00" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#FCBA00" BlurRadius="10" ShadowDepth="2" Opacity="0.4"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                <!-- ✅ FIXED: Removed LetterSpacing="2" as it's not supported in standard WPF TextBlock -->
+                <TextBlock Text="Premium Automation Suite" 
+                          FontSize="14" 
+                          Foreground="#888888" 
+                          HorizontalAlignment="Center"
+                          Margin="0,8,0,0"
+                          FontFamily="Segoe UI"
+                          FontStyle="Italic"/>
+            </StackPanel>
+
+            <!-- Status Text -->
+            <TextBlock x:Name="StatusText" 
+                      Grid.Row="2" 
+                      Text="Initializing application..." 
+                      FontSize="13" 
+                      Foreground="#AAAAAA" 
+                      HorizontalAlignment="Center"
+                      Margin="0,0,0,15"
+                      FontFamily="Segoe UI"/>
+
+            <!-- Progress Bar Container -->
+            <Border Grid.Row="3" 
+                    Background="#2D2D30" 
+                    CornerRadius="8" 
+                    Height="20" 
+                    Margin="0,0,0,20"
+                    BorderBrush="#404040"
+                    BorderThickness="1">
+                <Grid>
+                    <!-- Progress Bar -->
+                    <ProgressBar x:Name="ProgressBar" 
+                                Value="0" 
+                                Maximum="100"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="Transparent">
+                        <ProgressBar.Template>
+                            <ControlTemplate TargetType="ProgressBar">
+                                <Grid>
+                                    <Border x:Name="PART_Track" 
+                                          Background="#2D2D30" 
+                                          CornerRadius="6"/>
+
+                                    <!-- ✅ FIXED: Removed duplicate Background="Transparent" attribute here -->
+                                    <Border x:Name="PART_Indicator" 
+                                          HorizontalAlignment="Left"
+                                          CornerRadius="6">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <GradientStop Color="#FCBA00" Offset="0.0"/>
+                                                <GradientStop Color="#FFD700" Offset="0.5"/>
+                                                <GradientStop Color="#FCBA00" Offset="1.0"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#FCBA00" BlurRadius="8" ShadowDepth="0" Opacity="0.6"/>
+                                        </Border.Effect>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsIndeterminate" Value="True">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard RepeatBehavior="Forever">
+                                                    <DoubleAnimation Storyboard.TargetName="PART_Indicator"
+                                                                   Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                   From="0.4" To="1" Duration="0:0:1" AutoReverse="True"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ProgressBar.Template>
+                    </ProgressBar>
+
+                    <!-- Progress Percentage Text -->
+                    <TextBlock x:Name="ProgressText" 
+                              Text="0%" 
+                              FontSize="11" 
+                              Foreground="#FCBA00" 
+                              HorizontalAlignment="Center" 
+                              VerticalAlignment="Center"
+                              FontWeight="SemiBold"
+                              FontFamily="Segoe UI"/>
+                </Grid>
+            </Border>
+
+            <!-- Loading Dots Animation -->
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Ellipse x:Name="Dot1" Width="8" Height="8" Fill="#FCBA00" Margin="3,0">
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever">
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                   From="0.2" To="1" Duration="0:0:0.6" AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                <Ellipse x:Name="Dot2" Width="8" Height="8" Fill="#FCBA00" Margin="3,0">
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever" BeginTime="0:0:0.2">
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                   From="0.2" To="1" Duration="0:0:0.6" AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+                <Ellipse x:Name="Dot3" Width="8" Height="8" Fill="#FCBA00" Margin="3,0">
+                    <Ellipse.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard RepeatBehavior="Forever" BeginTime="0:0:0.4">
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                   From="0.2" To="1" Duration="0:0:0.6" AutoReverse="True"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Ellipse.Triggers>
+                </Ellipse>
+            </StackPanel>
+
+            <!-- Version and Copyright -->
+            <Grid Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                          Text="© 2026 GoldenBullet. All rights reserved." 
+                          FontSize="10" 
+                          Foreground="#555555" 
+                          VerticalAlignment="Bottom"
+                          FontFamily="Segoe UI"/>
+
+                <TextBlock Grid.Column="1" 
+                          Text="v2.2" 
+                          FontSize="11" 
+                          Foreground="#666666" 
+                          FontWeight="SemiBold"
+                          FontFamily="Segoe UI"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

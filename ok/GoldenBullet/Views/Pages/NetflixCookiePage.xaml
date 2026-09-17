@@ -1,0 +1,346 @@
+<Page x:Class="GoldenBullet.Views.Pages.NetflixCookiePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:controls="clr-namespace:GoldenBullet.Controls"
+      mc:Ignorable="d"
+      d:DesignHeight="700"
+      d:DesignWidth="1100"
+      Title="Netflix Cookie Checker"
+      Background="#FF121212">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#333333"/>
+        <SolidColorBrush x:Key="ForegroundGood" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="ForegroundBad" Color="#F44336"/>
+        <SolidColorBrush x:Key="ForegroundWarning" Color="#FBC02D"/>
+
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <Style x:Key="StatLineStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0 3"/>
+        </Style>
+
+
+
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="2 0"/>
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#444444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#555555"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#121212">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="10 10 10 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <iconPacks:PackIconMaterial Kind="Netflix" 
+                       Width="22" Height="22" 
+                       Foreground="Red"
+                       VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="NETFLIX COOKIE CHECKER" VerticalAlignment="Center"
+                           FontSize="15"
+                           FontWeight="Bold"
+                           Foreground="White"/>
+                <TextBlock Text=" | Check Netflix cookies for validity"
+                           FontSize="12"
+                           Opacity="0.6"
+                           VerticalAlignment="Center"
+                           Foreground="#AAA"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="StartButton" Height="30" Width="30"
+            Click="StartButton_Click"
+            Style="{StaticResource StyledSuccessButton}"
+            ToolTip="Start Check"
+            Margin="5 0 0 0">
+                    <iconPacks:PackIconFontAwesome Kind="PlaySolid"
+                                       Width="16"
+                                       Height="16"
+                                       Foreground="White"/>
+                </Button>
+
+                <Button x:Name="StopButton" Height="30" Width="30"
+            Click="StopButton_Click"
+            Style="{StaticResource StyledDangerButton}"
+            ToolTip="Stop Check"
+            IsEnabled="False"
+            Margin="5 0 0 0">
+                    <iconPacks:PackIconFontAwesome Kind="StopSolid"
+                                       Width="16"
+                                       Height="16"
+                                       Foreground="White"/>
+                </Button>
+
+                <Button Click="ClearLog_Click" Height="30" Width="30"
+            Style="{StaticResource StyledWarningButton}"
+            ToolTip="Clear Log"
+            Margin="5 0 0 0">
+                    <iconPacks:PackIconFontAwesome Kind="TrashSolid"
+                                       Width="16"
+                                       Height="16"
+                                       Foreground="White"/>
+                </Button>
+                
+            </StackPanel>
+
+        </Grid>
+
+        <!-- Stats Cards -->
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Style="{StaticResource StatCardStyle}">
+                <Grid>
+                    <TextBlock Text="Results"
+                               FontWeight="Bold"
+                               FontSize="14"
+                               Margin="0 0 0 10"
+                               Foreground="White"/>
+                    <StackPanel Margin="0 25 0 0">
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Total IDs: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="TotalCountLabel" Text="0" FontWeight="SemiBold" FontSize="12" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Checked: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="CheckedCountLabel" Text="0" FontWeight="SemiBold" FontSize="12" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Hits: " Foreground="{StaticResource ForegroundGood}" FontSize="12"/>
+                            <TextBlock x:Name="HitsCountLabel" Text="0" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource ForegroundGood}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Fails: " Foreground="{StaticResource ForegroundBad}" FontSize="12"/>
+                            <TextBlock x:Name="FailsCountLabel" Text="0" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource ForegroundBad}"/>
+                        </StackPanel>
+                        <!-- In the Progress card, update ProxyCountLabel binding if needed -->
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Proxies: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="ProxyCountLabel" Text="0" FontWeight="SemiBold" FontSize="12" Foreground="White"/>
+                        </StackPanel>
+                        
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource StatCardStyle}">
+                <Grid>
+                    <TextBlock Text="Progress"
+                               FontWeight="Bold"
+                               FontSize="14"
+                               Margin="0 0 0 10"
+                               Foreground="White"/>
+                    <StackPanel Margin="0 25 0 0">
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Success Rate: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="SuccessRateLabel" Text="0%" FontWeight="SemiBold" FontSize="12" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Threads: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="ThreadsLabel" Text="100" FontWeight="SemiBold" FontSize="12" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource StatLineStyle}">
+                            <TextBlock Text="Status: " Foreground="#AAA" FontSize="12"/>
+                            <TextBlock x:Name="StatusLabel" Text="Ready" FontWeight="SemiBold" FontSize="12" Foreground="{StaticResource ForegroundWarning}"/>
+                        </StackPanel>
+                        
+                        
+
+                    </StackPanel>
+                    
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Configuration Section -->
+        <Border Grid.Row="2"
+        Background="{StaticResource CardBackground}"
+        BorderBrush="{StaticResource BorderColor}"
+        BorderThickness="1"
+        CornerRadius="4"
+        Margin="10 1"
+        Padding="15">
+            <Grid>
+                <TextBlock Text="Configuration"
+                   FontWeight="Bold"
+                   FontSize="14"
+                   Margin="0 0 0 10"
+                   Foreground="White"/>
+                <Grid Margin="0 25 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Input File/Folder -->
+                    <StackPanel Grid.Column="0" Margin="5">
+                        <TextBlock Text="Input File/Folder"
+                           Foreground="#AAA"
+                           FontSize="11"
+                           Margin="0 0 0 5"/>
+                        <Grid>
+                            <TextBox x:Name="InputPathTextBox"
+                             Style="{StaticResource RoundedTextBox}"
+                             Height="35"
+                             Margin="0 0 65 0"
+                             TextChanged="InputPathTextBox_TextChanged"/>
+                            <Button Content="Browse" Style="{StaticResource StyledEditButton}"
+                            HorizontalAlignment="Right"
+                            Width="60"
+                            Height="35"
+                            Click="BrowseInput_Click"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Proxy Group Selector (Database) -->
+                    <!-- Column 1: Proxy Group Selector (Database) -->
+                    <StackPanel Grid.Column="1" Margin="5">
+                        <TextBlock Text="Proxy Group (Database)"
+               Foreground="#AAA"
+               FontSize="11"
+               Margin="0 0 0 5"/>
+                        <ComboBox x:Name="ProxyGroupCombo"
+              Style="{StaticResource RoundedComboBox}"
+              Height="35"
+              SelectionChanged="ProxyGroupCombo_SelectionChanged"
+              DropDownOpened="ProxyGroupCombo_DropDownOpened">
+                            <ComboBoxItem Content="-- Select group --" Tag="{x:Null}" IsSelected="True"/>
+                            <ComboBoxItem Content="All" Tag="ALL" Foreground="{StaticResource ForegroundWarning}"/>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- Threads + Only Untested -->
+                    <StackPanel Grid.Column="2" Margin="5">
+                        <TextBlock Text="Threads"
+                           Foreground="#AAA"
+                           FontSize="11"
+                           Margin="0 0 0 5"/>
+                        <mah:NumericUpDown x:Name="ThreadsNumericUpDown" 
+                                   Style="{DynamicResource RoundedNumericUpDown}"
+                                   Value="100"
+                                   Minimum="1"
+                                   Maximum="300"
+                                   Height="35"
+                                   Foreground="#FFFFFF"
+                                   mah:ControlsHelper.CornerRadius="4"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Controls & Log Output -->
+        <Grid Grid.Row="3" Margin="10,5,10,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0 0 0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Background="Transparent"
+                        CornerRadius="3"
+                        Padding="5"
+                        Grid.Column="0"
+                        Margin="-5,0,-5,0" Grid.ColumnSpan="2">
+                    <ProgressBar x:Name="ProgressBar" Style="{StaticResource GlowingProgressBar}"
+                                 Minimum="0"
+                                 Maximum="100"
+                                 Height="15"
+                                 Value="0"
+                                 Foreground="#D19900"
+                                 BorderThickness="0"/>
+                </Border>
+
+
+            </Grid>
+
+            <Border Grid.Row="1"
+                    Background="{StaticResource CardBackground}"
+                    BorderBrush="{StaticResource BorderColor}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Output Log"
+                               FontWeight="Bold"
+                               Margin="10"
+                               Grid.Row="0"
+                               Foreground="White"/>
+                    <controls:ColoredLog x:Name="LogTextBox"
+                                         Grid.Row="1"
+                                         Margin="10 0 10 10"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

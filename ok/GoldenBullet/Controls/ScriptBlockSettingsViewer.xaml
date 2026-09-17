@@ -1,0 +1,300 @@
+<UserControl x:Class="GoldenBullet.Controls.ScriptBlockSettingsViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoldenBullet.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="800"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Block Header Style -->
+        <Style x:Key="ScriptBlockHeaderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+
+        <!-- Header Text Styles -->
+        <Style x:Key="BlockTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="BlockDescStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+        <Style x:Key="BlockExtraStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FF666666"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,2,0,0"/>
+        </Style>
+
+        <!-- Form Field Styles -->
+        <Style x:Key="FormFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="MinWidth" Value="100"/>
+        </Style>
+
+        <Style x:Key="FormFieldStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#40D19900"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#D19900" BlurRadius="6" ShadowDepth="0" Opacity="0.3"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Output Variable Item Style -->
+        <Style x:Key="OutputVarItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#40D19900"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Section Label Style -->
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,16,0,10"/>
+        </Style>
+
+        <!-- Code Editor Container Style -->
+        <Style x:Key="CodeEditorContainerStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Margin" Value="0,16,0,0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Main Card Container -->
+    <Border Background="#FF252525" 
+            BorderBrush="#40D19900" 
+            BorderThickness="1" 
+            CornerRadius="8"
+            Margin="8,4">
+
+        <StackPanel Margin="15">
+
+            <!-- Block Header -->
+            <Border Style="{StaticResource ScriptBlockHeaderStyle}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <iconPacks:PackIconMaterial Kind="CodeBraces" 
+                                                    Width="16" Height="16" 
+                                                    Foreground="#D19900" 
+                                                    Margin="0,0,8,0"
+                                                    VerticalAlignment="Center"/>
+                        <TextBlock Style="{StaticResource BlockTitleStyle}"
+                                   Text="{Binding NameAndId}"/>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource BlockDescStyle}"
+                               Text="{Binding Block.Descriptor.Description}"
+                               Margin="24,0,0,2"/>
+                    <TextBlock Style="{StaticResource BlockExtraStyle}"
+                               Text="{Binding Block.Descriptor.ExtraInfo}"
+                               Margin="24,0,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Label Field -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Label:"/>
+                <TextBox Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding Label}"
+                         Width="220" Height="30"/>
+            </StackPanel>
+
+            <!-- Input Variables -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Input variables:"/>
+                <TextBox Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding InputVariables}"
+                         Width="220"
+                         ToolTip="Comma-separated list of input variable names" Height="31"/>
+            </StackPanel>
+
+            <!-- Interpreter Selection -->
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Interpreter:"/>
+                <ComboBox Style="{StaticResource RoundedComboBox}"
+                          SelectionChanged="InterpreterChanged"
+                          ItemsSource="{Binding Interpreters}"
+                          SelectedValue="{Binding Interpreter}" 
+                          Width="150"/>
+            </StackPanel>
+
+            <!-- Output Variables Section -->
+            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Output variables:"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                <Button x:Name="addOutputVariableButton" 
+                        Click="AddOutputVariable" 
+                        Style="{StaticResource StyledSuccessButton}"
+                        Width="85">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Add" Width="14" Height="14"/>
+                        <TextBlock Text="Add" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                    </StackPanel>
+                </Button>
+                <TextBlock Style="{StaticResource BlockExtraStyle}" 
+                           Text="Define variables that this script will output"
+                           VerticalAlignment="Center"
+                           Margin="12,0,0,0"/>
+            </StackPanel>
+
+            <!-- Output Variables List -->
+            <ItemsControl ItemsSource="{Binding OutputVariablesCollection}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource OutputVarItemStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" 
+                                           Style="{StaticResource FormFieldLabelStyle}" 
+                                           Text="Type:" 
+                                           MinWidth="40"
+                                           Margin="0,0,6,0"/>
+                                <ComboBox Grid.Column="1"
+                                          Style="{StaticResource RoundedComboBox}"
+                                          Margin="0,0,12,0"
+                                          ItemsSource="{Binding DataContext.VariableTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                          SelectedValue="{Binding Type}" 
+                                          Width="110"
+                                          Height="30"/>
+
+                                <TextBlock Grid.Column="2" 
+                                           Style="{StaticResource FormFieldLabelStyle}" 
+                                           Text="Name:" 
+                                           MinWidth="50"
+                                           Margin="0,0,6,0"/>
+                                <TextBox Grid.Column="3" 
+                                         Style="{StaticResource RoundedTextBox}"
+                                         Text="{Binding Name}" 
+                                         Height="30"
+                                         Margin="0,0,10,0"
+                                         ToolTip="Variable name to store the output"/>
+
+                                <Button x:Name="removeOutputVariable" 
+                                        Tag="{Binding}" 
+                                        Grid.Column="4" 
+                                        Click="RemoveOutputVariable" 
+                                        Style="{StaticResource StyledDangerButton}"
+                                        ToolTip="Remove this output variable"
+                                        VerticalAlignment="Center">
+                                    <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Script Editor Section -->
+            <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Script:"/>
+
+            <Border Style="{StaticResource CodeEditorContainerStyle}">
+                <Grid>
+                    <!-- Editor Header -->
+                    <Border Background="#FF1E1E1E" 
+                            Padding="10,8" 
+                            BorderBrush="#40D19900" 
+                            BorderThickness="0,0,0,1"
+                            CornerRadius="6,6,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="FileCodeOutline" 
+                                                        Width="14" Height="14" 
+                                                        Foreground="#D19900"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Edit your script below" 
+                                       Foreground="#FFE0E0E0" 
+                                       FontSize="11"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="• Consolas font • Line numbers enabled" 
+                                       Foreground="#FF666666" 
+                                       FontSize="10"
+                                       FontStyle="Italic"
+                                       VerticalAlignment="Center"
+                                       Margin="12,0,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- ✅ COMPATIBLE AvalonEdit Editor - Minimal Properties Only -->
+                    <avalonEdit:TextEditor x:Name="editor"
+                                           Margin="0,32,0,0"
+                                           Height="350"
+                                           FontFamily="Consolas"
+                                           FontSize="11"
+                                           Foreground="#FFE0E0E0"
+                                           Background="#FF1A1A1A"
+                                           LostFocus="EditorLostFocus"
+                                           TextChanged="EditorTextChanged"
+                                           ShowLineNumbers="True"
+                                           HorizontalAlignment="Stretch"
+                                           VerticalAlignment="Stretch"/>
+                </Grid>
+            </Border>
+
+            <!-- Editor Helper Text -->
+            <TextBlock Style="{StaticResource BlockExtraStyle}" 
+                       Text="Tip: Use Ctrl+Space for IntelliSense • Changes auto-save on focus loss"
+                       Margin="0,8,0,0"
+                       TextWrapping="Wrap"/>
+
+        </StackPanel>
+    </Border>
+</UserControl>

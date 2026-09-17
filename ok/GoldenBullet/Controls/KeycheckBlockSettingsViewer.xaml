@@ -1,0 +1,170 @@
+<UserControl x:Class="GoldenBullet.Controls.KeycheckBlockSettingsViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GoldenBullet.Controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="#FF1E1E1E">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- === Text Styles (Original Font Sizes) === -->
+        <Style x:Key="HeaderTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#fec34d"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="HeaderDescStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#fec34d"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="ExtraInfoStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#fec34d"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- === TextBox Style (Original Dimensions, Rounded Corners) === -->
+        <Style x:Key="RoundedTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#40D19900"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#D19900" BlurRadius="5" ShadowDepth="0" Opacity="0.3"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- === Button Style (Original: Width="70", Rounded Corners) === -->
+        <Style x:Key="KeycheckAddButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF218838"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF19692C"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FF28A745" BlurRadius="6" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1E7E34"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF155728"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Original: StackPanel Margin="5 0" -->
+    <StackPanel Margin="5 0" HorizontalAlignment="Stretch">
+
+        <!-- Header TextBlocks - Original Margins -->
+        <TextBlock Style="{StaticResource HeaderTitleStyle}"
+                   Text="{Binding NameAndId}"
+                   Margin="5 0 0 0"/>
+        <TextBlock Style="{StaticResource HeaderDescStyle}"
+                   Text="{Binding Block.Descriptor.Description}"
+                   Margin="5 5 0 0"/>
+        <TextBlock Style="{StaticResource ExtraInfoStyle}"
+                   Text="{Binding Block.Descriptor.ExtraInfo}"
+                   Margin="5 5 0 0"/>
+
+        <!-- Label + TextBox Row - Original DockPanel Layout -->
+        <DockPanel>
+            <Label Style="{StaticResource LabelStyle}"
+                   Content="Label:" 
+                   Foreground="{DynamicResource ForegroundCustom}"
+                   DockPanel.Dock="Left" />
+            <TextBox Style="{StaticResource RoundedTextBox}" VerticalContentAlignment="Center"
+                     Height="30"
+                     Text="{Binding Label}"
+                     DockPanel.Dock="Left" />
+        </DockPanel>
+
+        <!-- Settings Label - Original Margin="0 5" -->
+        <Label Content="Settings:"
+               Margin="0 5"
+               Foreground="{DynamicResource ForegroundCustom}" />
+
+        <!-- BoolSettingViewer - No Extra Margin (Original) -->
+        <local:BoolSettingViewer x:Name="banIfNoMatchSetting" />
+
+        <!-- Keychains Label - Original Margin="0 5" -->
+        <Label Content="Keychains:"
+               Margin="0 5"
+               Foreground="{DynamicResource ForegroundCustom}" />
+
+        <!-- Add Keychain Button - Original: Margin="5 5 5 5", Width="70", HorizontalAlignment="Left" -->
+        <Button x:Name="addKeycheckButton" 
+                Click="AddKeychain" 
+                Margin="5 5 5 5" 
+                Style="{StaticResource KeycheckAddButtonStyle}"
+                Width="70"
+                Height="20"
+                HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <iconPacks:PackIconMaterialDesign Kind="Add" Width="14" Height="14" VerticalAlignment="Center"/>
+                <TextBlock VerticalAlignment="Center" Margin="5 0" FontSize="11">Add</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <!-- Keychains Panel - Original: No Margin/Padding -->
+        <StackPanel x:Name="keychainsPanel" />
+
+    </StackPanel>
+</UserControl>

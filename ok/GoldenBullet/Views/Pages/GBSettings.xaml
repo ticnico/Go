@@ -1,0 +1,370 @@
+<Page x:Class="GoldenBullet.Views.Pages.GBSettings"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="1550" d:DesignWidth="800"
+      Title="Settings"
+      Background="Black"
+      MinWidth="900">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Section Card Style -->
+        <Style x:Key="SettingsCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,15"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeaderStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+
+        <!-- Setting Row Style -->
+        <Style x:Key="SettingRowStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0,8,0,8"/>
+        </Style>
+
+        <!-- Label Style -->
+        <Style x:Key="SettingLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="MinWidth" Value="180"/>
+        </Style>
+
+        <!-- Numeric UpDown Style -->
+        <Style x:Key="SettingNumericStyle" TargetType="mah:NumericUpDown" BasedOn="{StaticResource {x:Type mah:NumericUpDown}}">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <!-- List Item Card Style -->
+        <Style x:Key="SettingListItemStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#40D19900"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- List Item Label Style -->
+        <Style x:Key="ListItemLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#FF1E1E1E">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Page Header -->
+        <Border Grid.Row="0" Background="#FF1E1E1E" Padding="20,20,20,15">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <iconPacks:PackIconMaterial Kind="Cog" Width="24" Height="24" Foreground="#D19900" Margin="0,0,10,0"/>
+                    <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Foreground="#FFE0E0E0"/>
+                </StackPanel>
+                <TextBlock Text="Configure GoldenBullet behavior, remote endpoints, and UI preferences."
+                           Foreground="#FFAAAAAA" FontSize="12" TextWrapping="Wrap" MaxWidth="700"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Scrollable Settings Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,0,20,20">
+            <StackPanel>
+
+                <!-- ==================== GENERAL SECTION ==================== -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <!-- Section Header -->
+                        <StackPanel Style="{StaticResource SectionHeaderStyle}">
+                            <iconPacks:PackIconMaterial Kind="CogOutline" Width="20" Height="20" Foreground="#D19900" Margin="0,0,8,0"/>
+                            <TextBlock Text="General" FontSize="16" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <!-- Config Section on Load -->
+                        <StackPanel Style="{StaticResource SettingRowStyle}">
+                            <TextBlock Style="{StaticResource SettingLabelStyle}" Text="On config edit, navigate to:"/>
+                            <ComboBox Style="{StaticResource RoundedComboBox}"
+                                      x:Name="configSectionOnLoadCombobox"
+                                      SelectedValue="{Binding Path=ConfigSectionOnLoad}"
+                                      Width="200"/>
+                        </StackPanel>
+
+                        <!-- Auto Set Recommended Bots -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Automatically set Recommended Bots" Padding="2"
+                                  IsChecked="{Binding AutoSetRecommendedBots}"/>
+
+                        <!-- Warn Config Not Saved -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Warn when config is not saved before closing" Padding="2"
+                                  IsChecked="{Binding WarnConfigNotSaved}"/>
+
+                        <!-- Default Author -->
+                        <StackPanel Style="{StaticResource SettingRowStyle}">
+                            <TextBlock Style="{StaticResource SettingLabelStyle}" Text="Default author for new configs:"/>
+                            <TextBox Style="{StaticResource RoundedTextBox}"
+                                     Text="{Binding DefaultAuthor}" 
+                                     Width="250"/>
+                        </StackPanel>
+
+                        <!-- Enable Job Logging -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Enable logging in the job viewer page" 
+                                  IsChecked="{Binding EnableJobLogging}"/>
+
+                        <!-- Log Buffer Size -->
+                        <StackPanel Style="{StaticResource SettingRowStyle}">
+                            <TextBlock Style="{StaticResource SettingLabelStyle}" Text="Log buffer size (messages):"/>
+                            <mah:NumericUpDown Style="{StaticResource SettingNumericStyle}"
+                                  Minimum="20" Maximum="10000" Interval="1"
+                                  Value="{Binding LogBufferSize}"/>
+                        </StackPanel>
+
+                        <!-- Group Captures in Debugger -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Group captures in debugger" Padding="2"
+                                  IsChecked="{Binding GroupCapturesInDebugger}"/>
+
+                        <!-- Ignore Wordlist Name on Dedupe -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Ignore wordlist name when removing duplicate hits" Padding="2"
+                                  IsChecked="{Binding IgnoreWordlistNameOnHitsDedupe}"/>
+
+                        
+
+                        <!-- Custom Editor Snippets -->
+                        <StackPanel Margin="0,20,0,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <iconPacks:PackIconMaterial Kind="CodeTags" Width="16" Height="16" Foreground="#D19900" Margin="0,0,6,0"/>
+                                <TextBlock Text="Custom Editor Snippets" FontSize="13" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                                <TextBlock Text="(requires restart)" FontSize="10" Foreground="#FF666666" Margin="6,0,0,0" FontStyle="Italic"/>
+                            </StackPanel>
+
+                            <Button Click="AddCustomSnippet" 
+                                    Style="{StaticResource StyledSuccessButton}"
+                                    Cursor="Hand"
+                                    Width="85" Height="30" HorizontalAlignment="Left" Margin="0,0,0,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" Width="14" Height="14"/>
+                                    <TextBlock Text="Add" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="12"/>
+                                </StackPanel>
+                            </Button>
+
+                            <ItemsControl ItemsSource="{Binding CustomSnippetsCollection}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource SettingListItemStyle}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Name -->
+                                                <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource ListItemLabelStyle}" Text="Name:"/>
+                                                <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource RoundedTextBox}" 
+                                                         Text="{Binding Name}" Margin="0,0,10,0"/>
+                                                <Button Grid.Row="0" Grid.Column="2" Tag="{Binding}" 
+                                                        Click="RemoveCustomSnippet" 
+                                                        Style="{StaticResource StyledDangerButton}"
+                                                        Cursor="Hand"
+                                                        Width="32" Height="30" Margin="0,0,0,0"
+                                                        ToolTip="Remove snippet">
+                                                    <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"/>
+                                                </Button>
+
+                                                <!-- Description -->
+                                                <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource ListItemLabelStyle}" Text="Description:"/>
+                                                <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                                         Style="{StaticResource RoundedTextBox}" 
+                                                         Text="{Binding Description}" Margin="0,5,0,0"/>
+
+                                                <!-- Body (Code Editor) -->
+                                                <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource ListItemLabelStyle}" Text="Body:" VerticalAlignment="Top" Margin="0,8,8,0"/>
+                                                <TextBox Grid.Row="2" Grid.RowSpan="1" Grid.Column="1" Grid.ColumnSpan="2" 
+                                                         Style="{StaticResource RoundedTextBox}"
+                                                         FontFamily="Consolas" FontSize="11"
+                                                         VerticalContentAlignment="Top" AcceptsReturn="True" TextWrapping="Wrap"
+                                                         Text="{Binding Body}" Margin="0,5,0,0" Height="80"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ==================== REMOTE SECTION ==================== -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <!-- Section Header -->
+                        <StackPanel Style="{StaticResource SectionHeaderStyle}">
+                            <iconPacks:PackIconMaterial Kind="CloudOutline" Width="20" Height="20" Foreground="#D19900" Margin="0,0,8,0"/>
+                            <TextBlock Text="Remote" FontSize="16" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <!-- Remote Configs Endpoints -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <iconPacks:PackIconMaterial Kind="Link" Width="16" Height="16" Foreground="#D19900" Margin="0,0,6,0"/>
+                            <TextBlock Text="Remote Configs Endpoints" FontSize="13" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <Button x:Name="addRemoteConfigsEndpointButton" 
+                                Click="AddRemoteConfigsEndpoint" 
+                                Style="{StaticResource StyledSuccessButton}"
+                                Cursor="Hand"
+                                Width="85" Height="30" HorizontalAlignment="Left" Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterialDesign Kind="Add" Width="14" Height="14"/>
+                                <TextBlock Text="Add" VerticalAlignment="Center" Margin="4,0,0,0" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+
+                        <ItemsControl x:Name="remoteConfigsEndpointsControl" 
+                                      ItemsSource="{Binding RemoteConfigsEndpointsCollection}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource SettingListItemStyle}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Style="{StaticResource ListItemLabelStyle}" Text="URL:"/>
+                                            <TextBox Grid.Column="1" Style="{StaticResource RoundedTextBox}" 
+                                                     Text="{Binding Url}" Margin="0,0,10,0"/>
+
+                                            <TextBlock Grid.Column="2" Style="{StaticResource ListItemLabelStyle}" Text="API Key:"/>
+                                            <TextBox Grid.Column="3" Style="{StaticResource RoundedTextBox}" 
+                                                     Text="{Binding ApiKey}" Margin="0,0,10,0"
+                                                     mah:TextBoxHelper.UseFloatingWatermark="True"/>
+
+                                            <Button Grid.Column="4" Tag="{Binding}" 
+                                                    Click="RemoveRemoteConfigsEndpoint" 
+                                                    Style="{StaticResource StyledDangerButton}"
+                                                    Cursor="Hand"
+                                                    Width="32" Height="30" Margin="5,0,0,0"
+                                                    ToolTip="Remove endpoint">
+                                                <iconPacks:PackIconMaterial Kind="Close" Width="14" Height="14"/>
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ==================== CUSTOMIZATION SECTION ==================== -->
+                <Border Style="{StaticResource SettingsCardStyle}">
+                    <StackPanel>
+                        <!-- Section Header -->
+                        <StackPanel Style="{StaticResource SectionHeaderStyle}">
+                            <iconPacks:PackIconMaterial Kind="PaletteOutline" Width="20" Height="20" Foreground="#D19900" Margin="0,0,8,0"/>
+                            <TextBlock Text="Customization" FontSize="16" FontWeight="SemiBold" Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <!-- Play Sound on Hit -->
+                        <CheckBox Style="{StaticResource RoundedCheckBox}"
+                                  Content="Play a sound when a hit is found" 
+                                  IsChecked="{Binding PlaySoundOnHit}"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer Action Buttons -->
+        <Border Grid.Row="2" Background="#FF1E1E1E" Padding="20,15" BorderBrush="#40D19900" BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                           Text="Changes take effect after saving and restarting GoldenBullet" 
+                           Foreground="#FF666666" FontSize="11" VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="resetButton" 
+                            Click="Reset" 
+                            Style="{StaticResource StyledDangerButton}"
+                            Cursor="Hand"
+                            Width="100" Height="36" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconRadixIcons Kind="Reset" Width="14" Height="14"/>
+                            <TextBlock Text="Reset" VerticalAlignment="Center" Margin="6,0,0,0" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="saveButton" 
+                            Click="Save" 
+                            Style="{StaticResource StyledPrimaryButton}"
+                            Cursor="Hand"
+                            Width="100" Height="36">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconRemixIcon Kind="Save3Fill" Width="14" Height="14"/>
+                            <TextBlock Text="Save" VerticalAlignment="Center" Margin="6,0,0,0" FontWeight="Medium"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

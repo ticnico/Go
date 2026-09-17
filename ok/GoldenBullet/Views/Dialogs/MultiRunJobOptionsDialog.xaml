@@ -1,0 +1,1000 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.MultiRunJobOptionsDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:uc="clr-namespace:GoldenBullet.Controls"
+      xmlns:ho="clr-namespace:Core.Models.Hits;assembly=Core"
+      mc:Ignorable="d"
+      Title="MultiRunJobOptionsDialog"
+      Background="Black"
+      MinWidth="900">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+             
+        <!-- Styled Primary Button -->
+        <Style x:Key="StyledPrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF3C3C3C"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="BorderBrush" Value="#FF505050"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF4A4A4A"/>
+                                <Setter Property="BorderBrush" Value="#FFFFD700"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+    </Page.Resources>
+
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto"
+        Background="#FF1E1E1E">
+        <Border Padding="20" Background="#FF1E1E1E">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="400"/>
+                        <ColumnDefinition Width="*" MinWidth="400"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Header with Inline Buttons -->
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,20">
+                        <!-- Main content: icon + title + description -->
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <iconPacks:PackIconMaterial Kind="LightningBolt" Width="24" Height="24" Foreground="#FFFFD700" Margin="0,0,10,0"/>
+                                <TextBlock Text="Create Multi Run Job" FontSize="20" FontWeight="Bold" Foreground="#FFE0E0E0"/>
+                            </StackPanel>
+                            <TextBlock Text="A Multi Run Job will let you run a config using input data such as wordlists or combinations of letters."
+            Foreground="#FFAAAAAA" FontSize="12" TextWrapping="Wrap" MaxWidth="800" HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <!-- Buttons aligned to top-right -->
+                        <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="0,0,0,0">
+                            <Button Click="Cancel"
+                Margin="0,0,10,0"
+                Style="{StaticResource StyledPrimaryButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconOcticons Kind="ArrowLeft" />
+                                    <TextBlock VerticalAlignment="Center" Margin="10,0">Back</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="Accept"
+                Style="{StaticResource StyledSuccessButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconOcticons Kind="Check" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Accept</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Left Column -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,10,20,0">
+                        <Label Content="Start condition" Foreground="#FFE0E0E0" />
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <RadioButton 
+                                Content="Start in"
+                                x:Name="startInButton"
+                                IsChecked="{Binding StartInMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton 
+                                Content="Start at"
+                                x:Name="startAtButton"
+                                IsChecked="{Binding StartAtMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                        </StackPanel>
+
+                        <TabControl x:Name="startConditionTabControl" Background="Transparent" BorderThickness="0" Margin="0,5">
+                            <TabControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type TabItem}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </TabControl.ItemContainerStyle>
+                            <TabItem>
+                                <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
+                            </TabItem>
+                            <TabItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <mah:DateTimePicker
+                                        Width="200"
+                                        SelectedTimeFormat="Long"
+                                        SelectedDateTime="{Binding StartAtTime, Mode=TwoWay}" 
+                                        Background="#FF2D2D2D"
+                                        Foreground="#FFE0E0E0"/>
+                                </StackPanel>
+                            </TabItem>
+                        </TabControl>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,15,0,5">
+    <Label Foreground="#FFE0E0E0" Content="Config:" VerticalAlignment="Center"/>
+    
+    <!-- Config Info (only shown when selected) -->
+    <StackPanel Orientation="Horizontal"
+                Visibility="{Binding IsConfigSelected, Converter={StaticResource BoolToVis}}"
+                Margin="5,0,0,0">
+        <Image 
+            Source="{Binding ConfigIcon}"
+            Width="32"
+            Height="32"
+            Margin="5,0,10,0"/>
+        <Label 
+            Content="{Binding ConfigNameAndAuthor}"
+            Foreground="#FFE0E0E0"
+            VerticalAlignment="Center"
+            FontSize="14"
+            FontWeight="SemiBold"/>
+    </StackPanel>
+</StackPanel>
+                        <Button Click="SelectConfig"
+                                Margin="5,0,0,0"
+                                Width="120"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource StyledPrimaryButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Margin="5,0">Select Config</TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
+                                <Label Foreground="#FFE0E0E0" Width="40">Bots</Label>
+                                <mah:NumericUpDown Minimum="1"
+                           Maximum="{Binding BotLimit}"
+                           Interval="1"
+                           Value="{Binding Bots, Mode=TwoWay}"
+                           Width="130"
+                           Background="#FF2D2D2D"
+                           Foreground="#FFE0E0E0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Foreground="#FFE0E0E0" Width="50">Skip</Label>
+                                <mah:NumericUpDown Minimum="0"
+                           Maximum="2147483647"
+                           Interval="1"
+                           Value="{Binding Skip, Mode=TwoWay}"
+                           Width="130"
+                           Background="#FF2D2D2D"
+                           Foreground="#FFE0E0E0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <Label Width="167" Foreground="#FFE0E0E0">Proxy mode</Label>
+                            <ComboBox
+                                ItemsSource="{Binding ProxyModes}"
+                                SelectedValue="{Binding ProxyMode}"
+                                Width="205"
+                                HorizontalAlignment="Left"
+                                Background="#FF2D2D2D"
+                                Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <Label Foreground="#FFE0E0E0">When all proxies are banned / invalid</Label>
+                            <ComboBox
+                                ItemsSource="{Binding NoValidProxyBehaviours}"
+                                SelectedValue="{Binding NoValidProxyBehaviour}"
+                                Width="165"
+                                HorizontalAlignment="Left"
+                                Background="#FF2D2D2D"
+                                Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <CheckBox
+                            Margin="5,5,0,0"
+                            Content="Shuffle proxies"
+                            Foreground="#FFE0E0E0"
+                            IsChecked="{Binding ShuffleProxies}"
+                            Style="{StaticResource RoundedCheckBox}" />
+                        <CheckBox
+                            Margin="5,5,0,0"
+                            Content="Mark current lines as ToCheck on abort"
+                            Foreground="#FFE0E0E0"
+                            IsChecked="{Binding MarkAsToCheckOnAbort}"
+                            Style="{StaticResource RoundedCheckBox}" />
+                        <CheckBox
+                            Margin="5,5,0,0"
+                            Content="Never ban proxies"
+                            Foreground="#FFE0E0E0"
+                            IsChecked="{Binding NeverBanProxies}"
+                            Style="{StaticResource RoundedCheckBox}" />
+                        <CheckBox
+                            Margin="5,5,0,0"
+                            Content="Concurrent mode (tick when using rotating proxy services)"
+                            Foreground="#FFE0E0E0"
+                            IsChecked="{Binding ConcurrentProxyMode}"
+                            Style="{StaticResource RoundedCheckBox}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <Label Foreground="#FFE0E0E0">Periodic reload interval (seconds, 0 to disable)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                               Maximum="2147483647"
+                                               Interval="1"
+                                               Value="{Binding PeriodicReloadIntervalSeconds}"
+                                               Width="120"
+                                               Background="#FF2D2D2D"
+                                               Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <Label Foreground="#FFE0E0E0" Width="240">Proxy ban time (seconds)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                               Maximum="2147483647"
+                                               Interval="1"
+                                               Value="{Binding ProxyBanTimeSeconds}"
+                                               Width="133"
+                                               Background="#FF2D2D2D"
+                                               Foreground="#FFE0E0E0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Right Column - Reordered: Data Pool first, then Hit Outputs, then Proxy Sources -->
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="20,10,0,0">
+
+                        <!-- Data Pool Section -->
+                        <Label Foreground="#FFE0E0E0" Content="Data pool:" />
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <RadioButton 
+                                Content="Wordlist"
+                                x:Name="wordlistDataPoolButton"
+                                IsChecked="{Binding WordlistDataPoolMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton 
+                                Content="File"
+                                x:Name="fileDataPoolButton"
+                                IsChecked="{Binding FileDataPoolMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton 
+                                Content="Range"
+                                x:Name="rangeDataPoolButton"
+                                IsChecked="{Binding RangeDataPoolMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton 
+                                Content="Combinations"
+                                x:Name="combinationsDataPoolButton"
+                                IsChecked="{Binding CombinationsDataPoolMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton 
+                                Content="Infinite"
+                                x:Name="infiniteDataPoolButton"
+                                IsChecked="{Binding InfiniteDataPoolMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                        </StackPanel>
+
+                        <Border Background="#FF252525" 
+                                BorderBrush="#80D19900" 
+                                BorderThickness="1" 
+                                CornerRadius="8"
+                                Margin="0,10,0,0"
+                                Padding="10">
+
+                            <ContentControl 
+                                Content="{Binding DataPoolOptions}">
+                                <ContentControl.Resources>
+                                    <DataTemplate DataType="{x:Type local:WordlistDataPoolOptionsViewModel}">
+                                        <StackPanel>
+                                            <Label Content="{Binding Info}" Foreground="#FFAAAAAA"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Click="SelectWordlist"
+                                                        Margin="5,10,0,0"
+                                                        Width="100"
+                                                        HorizontalAlignment="Left"
+                                                        Style="{StaticResource StyledPrimaryButton}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock VerticalAlignment="Center" Margin="5,0">Select Wordlist</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Click="AddWordlist"
+                                                        Margin="5,10,0,0"
+                                                        Width="100"
+                                                        HorizontalAlignment="Left"
+                                                        Style="{StaticResource StyledPrimaryButton}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock VerticalAlignment="Center" Margin="5,0">Add Wordlist</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type local:FileDataPoolOptionsViewModel}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"
+                                                Foreground="#FFE0E0E0">File name</Label>
+                                            <TextBox
+                                                Grid.Column="1"
+                                                Text="{Binding FileName, Mode=TwoWay}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <Button Tag="{Binding}" Grid.Column="2" 
+                                                    Click="SelectFileForDataPool" 
+                                                    Margin="5,0,5,0"
+                                                    Style="{StaticResource StyledPrimaryButton}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <iconPacks:PackIconRemixIcon Kind="Folder2Fill" />
+                                                </StackPanel>
+                                            </Button>
+                                            <ComboBox
+                                                Grid.Column="3"
+                                                Margin="5,0,0,0"
+                                                ItemsSource="{Binding DataContext.WordlistTypes, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                SelectedValue="{Binding WordlistType}"
+                                                HorizontalAlignment="Left"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type local:RangeDataPoolOptionsViewModel}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"
+                                                Foreground="#FFE0E0E0">Start</Label>
+                                            <mah:NumericUpDown
+                                                Minimum="-2147483648"
+                                                Grid.Column="1"
+                                                Maximum="2147483647"
+                                                Interval="1"
+                                                Value="{Binding Start}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="2"
+                                                Foreground="#FFE0E0E0">Amount</Label>
+                                            <mah:NumericUpDown 
+                                                Minimum="0"
+                                                Grid.Column="3"
+                                                Maximum="2147483647"
+                                                Interval="1"
+                                                Value="{Binding Amount}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="4"
+                                                Foreground="#FFE0E0E0">Step</Label>
+                                            <mah:NumericUpDown 
+                                                Grid.Column="5"
+                                                Minimum="0"
+                                                Maximum="2147483647"
+                                                Interval="1"
+                                                Value="{Binding Step}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <CheckBox
+                                                Grid.Column="6"
+                                                Margin="5,2,0,0"
+                                                Content="Pad"
+                                                Foreground="#FFE0E0E0"
+                                                IsChecked="{Binding Pad}"
+                                                Style="{StaticResource RoundedCheckBox}" />
+                                            <ComboBox
+                                                Grid.Column="7"
+                                                Margin="5,0,0,0"
+                                                ItemsSource="{Binding DataContext.WordlistTypes, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                SelectedValue="{Binding WordlistType}"
+                                                HorizontalAlignment="Left"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type local:CombinationsDataPoolOptionsViewModel}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"
+                                                Foreground="#FFE0E0E0">Charset</Label>
+                                            <TextBox
+                                                Grid.Column="1"
+                                                ToolTip="{Binding GeneratedAmountText}"
+                                                Text="{Binding CharSet}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="2"
+                                                Foreground="#FFE0E0E0">Length</Label>
+                                            <mah:NumericUpDown 
+                                                Minimum="0"
+                                                Grid.Column="3"
+                                                Maximum="2147483647"
+                                                ToolTip="{Binding GeneratedAmountText}"
+                                                Interval="1"
+                                                Value="{Binding Length}"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                            <ComboBox
+                                                Grid.Column="4"
+                                                Margin="5,0,0,0"
+                                                ItemsSource="{Binding DataContext.WordlistTypes, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                SelectedValue="{Binding WordlistType}"
+                                                HorizontalAlignment="Left"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type local:InfiniteDataPoolOptionsViewModel}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label
+                                                VerticalAlignment="Center"
+                                                Grid.Column="0"
+                                                Foreground="#FFE0E0E0">Wordlist Type</Label>
+                                            <ComboBox
+                                                Margin="5,0,0,0"
+                                                ItemsSource="{Binding DataContext.WordlistTypes, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+                                                SelectedValue="{Binding WordlistType}"
+                                                HorizontalAlignment="Left"
+                                                Background="#FF2D2D2D"
+                                                Foreground="#FFE0E0E0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ContentControl.Resources>
+                            </ContentControl>
+                        </Border>
+
+                        <!-- Hit Outputs Section (Moved up) -->
+                        <Label Foreground="#FFE0E0E0" Content="Hit outputs:" Margin="0,20,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Click="AddDatabaseHitOutput" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Database</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddFileSystemHitOutput" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">File System</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddDiscordWebhookHitOutput" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Discord</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddTelegramBotHitOutput" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Telegram</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddCustomWebhookHitOutput" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Custom Webhook</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <Border Background="#FF252525" 
+                                BorderBrush="#80D19900" 
+                                BorderThickness="1" 
+                                CornerRadius="8"
+                                Height="100"
+                                Margin="0,5">
+                            <ScrollViewer 
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding HitOutputsCollection}" Margin="5">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.Resources>
+                                        <DataTemplate DataType="{x:Type ho:DatabaseHitOutputOptions}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="Database"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="1" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="No settings required"
+                                                        Foreground="#FFAAAAAA"/>
+                                                    <Button Tag="{Binding}" Grid.Column="3" 
+                                                            Click="RemoveHitOutput" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type ho:FileSystemHitOutputOptions}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="File System"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="1" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Base folder"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="2"
+                                                        Text="{Binding BaseDir}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Button Tag="{Binding}" Grid.Column="3" 
+                                                            Click="RemoveHitOutput" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type ho:DiscordWebhookHitOutputOptions}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Discord"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="1" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Webhook"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="2"
+                                                        Text="{Binding Webhook}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="3" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Username"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="4"
+                                                        Text="{Binding Username}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="5" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Avatar URL"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="6"
+                                                        Text="{Binding AvatarUrl}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <CheckBox
+                                                        Margin="5,0,0,0"
+                                                        Grid.Column="7"
+                                                        Content="Only hits"
+                                                        Foreground="#FFE0E0E0"
+                                                        IsChecked="{Binding OnlyHits}"
+                                                        Style="{StaticResource RoundedCheckBox}" />
+                                                    <Button Tag="{Binding}" Grid.Column="8" 
+                                                            Click="RemoveHitOutput" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type ho:TelegramBotHitOutputOptions}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Telegram"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="1" 
+                                                        VerticalAlignment="Center"
+                                                        Content="API Server"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="2"
+                                                        Text="{Binding ApiServer}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="3" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Bot Token"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="4"
+                                                        Text="{Binding Token}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="5" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Chat ID"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <mah:NumericUpDown 
+                                                        Grid.Column="6"
+                                                        Minimum="-2147483648"
+                                                        Maximum="2147483647"
+                                                        Interval="1"
+                                                        Value="{Binding ChatId}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <CheckBox
+                                                        Margin="5,0,0,0"
+                                                        Grid.Column="7"
+                                                        Content="Only hits"
+                                                        Foreground="#FFE0E0E0"
+                                                        IsChecked="{Binding OnlyHits}"
+                                                        Style="{StaticResource RoundedCheckBox}" />
+                                                    <Button Tag="{Binding}" Grid.Column="8" 
+                                                            Click="RemoveHitOutput" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type ho:CustomWebhookHitOutputOptions}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center"
+                                                        Content="Custom Webhook"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="1" 
+                                                        VerticalAlignment="Center"
+                                                        Content="URL"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="2"
+                                                        Text="{Binding Url}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Label 
+                                                        Grid.Column="3" 
+                                                        VerticalAlignment="Center"
+                                                        Content="User"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="4"
+                                                        Text="{Binding User}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <CheckBox
+                                                        Margin="5,0,0,0"
+                                                        Grid.Column="5"
+                                                        Content="Only hits"
+                                                        Foreground="#FFE0E0E0"
+                                                        IsChecked="{Binding OnlyHits}"
+                                                        Style="{StaticResource RoundedCheckBox}" />
+                                                    <Button Tag="{Binding}" Grid.Column="6" 
+                                                            Click="RemoveHitOutput" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.Resources>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Proxy Sources Section (Moved under Hit Outputs) -->
+                        <Label Foreground="#FFE0E0E0" Content="Proxy sources:" Margin="0,20,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Click="AddGroupProxySource" Margin="5,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Group</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddFileProxySource" Margin="0,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">File</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="AddRemoteProxySource" Margin="0,5,5,5" 
+                                    Style="{StaticResource StyledPrimaryButton}"
+                                    HorizontalAlignment="Left" >
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconMaterialDesign Kind="Add" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Remote</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <Border Background="#FF252525" 
+                                BorderBrush="#80D19900" 
+                                BorderThickness="1" 
+                                CornerRadius="8"
+                                MinHeight="84"
+                                Margin="0,5" Height="42">
+                            <ScrollViewer 
+                                HorizontalScrollBarVisibility="Auto"
+                                VerticalScrollBarVisibility="Auto" MaxHeight="200" Height="53">
+                                <ItemsControl ItemsSource="{Binding ProxySourcesCollection}" Margin="5">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.Resources>
+                                        <DataTemplate DataType="{x:Type local:GroupProxySourceOptionsViewModel}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="Group"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <ComboBox
+                                                        Grid.Column="1"
+                                                        ItemsSource="{Binding DataContext.ProxyGroupNames, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        SelectedValue="{Binding GroupName}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Button Tag="{Binding}" Grid.Column="3" 
+                                                            Click="RemoveProxySource" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:FileProxySourceOptionsViewModel}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="File name"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="1"
+                                                        Text="{Binding FileName, Mode=TwoWay}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Button Tag="{Binding}" Grid.Column="2" 
+                                                            Click="SelectFileForProxySource" 
+                                                            Margin="5,0,5,0"
+                                                            Style="{StaticResource StyledPrimaryButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconRemixIcon Kind="Folder2Fill" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                    <ComboBox
+                                                        Grid.Column="3"
+                                                        Margin="5,0,0,0"
+                                                        ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        SelectedValue="{Binding DefaultType}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Button Tag="{Binding}" Grid.Column="4" 
+                                                            Click="RemoveProxySource" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                        <DataTemplate DataType="{x:Type local:RemoteProxySourceOptionsViewModel}">
+                                            <Border Padding="5,5,0,0">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label 
+                                                        Grid.Column="0" 
+                                                        VerticalAlignment="Center" 
+                                                        Content="Url"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <TextBox
+                                                        Grid.Column="1"
+                                                        Text="{Binding Url}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <ComboBox
+                                                        Grid.Column="2"
+                                                        Margin="5,0,0,0"
+                                                        ItemsSource="{Binding DataContext.ProxyTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                        SelectedValue="{Binding DefaultType}"
+                                                        Background="#FF2D2D2D"
+                                                        Foreground="#FFE0E0E0"/>
+                                                    <Button Tag="{Binding}" Grid.Column="3" 
+                                                            Click="RemoveProxySource" 
+                                                            Margin="5,0,5,0" 
+                                                            Style="{StaticResource StyledDangerButton}" >
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <iconPacks:PackIconMaterial Kind="Close" />
+                                                        </StackPanel>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.Resources>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</Page>

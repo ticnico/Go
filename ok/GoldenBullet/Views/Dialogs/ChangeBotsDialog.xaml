@@ -1,0 +1,165 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.ChangeBotsDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Change Bot Count"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <!-- Dialog Card Style -->
+        <Style x:Key="DialogCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,16"/>
+            <Setter Property="Margin" Value="20"/>
+        </Style>
+
+        <!-- Dialog Header Style -->
+        <Style x:Key="DialogHeaderStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+        </Style>
+
+        <!-- Dialog Title Style -->
+        <Style x:Key="DialogTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Dialog Subtitle Style -->
+        <Style x:Key="DialogSubtitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Form Field Label Style -->
+        <Style x:Key="FormFieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,12,20"/>
+        </Style>
+
+        <!-- Themed NumericUpDown Style -->
+        <Style x:Key="DialogNumericStyle" TargetType="mah:NumericUpDown" BasedOn="{StaticResource {x:Type mah:NumericUpDown}}">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Minimum" Value="1"/>
+            <Setter Property="Maximum" Value="200"/>
+            <Setter Property="Interval" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Dialog Button Style -->
+        <Style x:Key="DialogButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FF28A745"/>
+            <Setter Property="BorderBrush" Value="#FF1E7E34"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF218838"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF19692C"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FF28A745" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1E7E34"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF155728"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.5"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <!-- Centered Dialog Container -->
+    <Grid Background="#FF1E1E1E">
+        <Border Style="{StaticResource DialogCardStyle}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="320">
+
+            <StackPanel HorizontalAlignment="Center">
+
+                <!-- Dialog Header -->
+                <StackPanel Style="{StaticResource DialogHeaderStyle}">
+                    <iconPacks:PackIconMaterial Kind="AccountGroup" 
+                                                Width="20" Height="20" 
+                                                Foreground="#D19900" 
+                                                Margin="0,0,10,0"
+                                                VerticalAlignment="Center"/>
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource DialogTitleStyle}" Text="Bot Count"/>
+                        <TextBlock Style="{StaticResource DialogSubtitleStyle}" Text="Set the number of bots for this job"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Bot Count Input -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                    <TextBlock Style="{StaticResource FormFieldLabelStyle}" Text="Number of bots:"/>
+                    <mah:NumericUpDown x:Name="bots"
+                                       Style="{StaticResource DialogNumericStyle}"/>
+                </StackPanel>
+
+                <!-- Helper Text -->
+                <TextBlock Text="Recommended: 1-50 for most configs" 
+                           Foreground="#FF666666" 
+                           FontSize="10" 
+                           FontStyle="Italic"
+                           TextAlignment="Center"
+                           Margin="0,0,0,20"/>
+
+                <!-- Action Button -->
+                <Button Click="Accept"
+                        Style="{StaticResource DialogButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterialDesign Kind="Check" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="Apply" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

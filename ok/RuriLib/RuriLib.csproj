@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Authors>TicnicO</Authors>
+        <Description>The library that powers OpenBullet.</Description>
+        <Copyright>TicnicO</Copyright>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <EmbedPythonSources>true</EmbedPythonSources>
+        <EnableDefaultPythonItems>false</EnableDefaultPythonItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Functions\Http\Boom.cs" />
+      <Compile Remove="Functions\Http\TlsClientRequestHandler.cs" />
+      <Compile Remove="Models\Jobs\AzenvProxyJudge.cs" />
+      <Compile Remove="Models\Jobs\IProxyJudge.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AngleSharp" Version="1.4.0" />
+        <PackageReference Include="DnsClient" Version="1.8.0" />
+        <PackageReference Include="CaptchaSharp" Version="2.1.0" />
+        <PackageReference Include="CSnakes.Runtime" Version="2.0.0-beta.333" />
+        <PackageReference Include="DeviceId" Version="5.2.0" />
+        <PackageReference Include="FluentFTP" Version="54.2.0" />
+        <PackageReference Include="Flurl.Http" Version="4.0.2" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+        <PackageReference Include="IronPython" Version="2.7.11" />
+        <PackageReference Include="IronPython.StdLib" Version="2.7.11" />
+        <PackageReference Include="Jering.Javascript.NodeJS" Version="7.0.0" />
+        <PackageReference Include="Jint" Version="4.9.3" />
+        <PackageReference Include="JWT" Version="11.0.0" />
+        <PackageReference Include="MimeKit" Version="4.16.0" />
+        <PackageReference Include="MailKit" Version="4.16.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.5.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260427" />
+        <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260302" />
+        <PackageReference Include="PuppeteerExtraSharp" Version="3.1.1" />
+        <PackageReference Include="PuppeteerSharp" Version="25.1.0" />
+        <PackageReference Include="Scrypt.NET" Version="1.3.0" />
+        <PackageReference Include="Selenium.Support" Version="4.44.0" />
+        <PackageReference Include="Selenium.WebDriver" Version="4.44.0" />
+        <PackageReference Include="Ruri.GhostCursorSharp.Playwright" Version="0.3.0" />
+        <PackageReference Include="Ruri.GhostCursorSharp.Puppeteer" Version="0.3.0" />
+        <PackageReference Include="Microsoft.Playwright" Version="1.59.0" />
+        <PackageReference Include="SSH.NET" Version="2025.1.0" />
+        <PackageReference Include="Svg" Version="3.4.7" />
+        <PackageReference Include="System.CodeDom" Version="10.0.8" />
+        <PackageReference Include="System.Management" Version="10.0.8" />
+        <PackageReference Include="Websocket.Client" Version="5.5.0" />
+        <PackageReference Include="Yove.Proxy" Version="1.1.1" />
+        <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\RuriLib.Http\RuriLib.Http.csproj" />
+        <ProjectReference Include="..\RuriLib.Parallelization\RuriLib.Parallelization.csproj" />
+        <ProjectReference Include="..\RuriLib.Proxies\RuriLib.Proxies.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AdditionalFiles Include="Blocks\Interop\ob2_python_bridge.py" SourceItemType="Python" />
+        <EmbeddedResource Include="Blocks\Interop\ob2_python_bridge.py" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,366 @@
+<Page x:Class="GoldenBullet.Views.Pages.Shared.Debugger"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages.Shared"
+      xmlns:converters="clr-namespace:GoldenBullet.Converters"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
+      xmlns:uc="clr-namespace:GoldenBullet.Controls"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Debugger"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <!-- Control Panel Card Style -->
+        <Style x:Key="ControlPanelStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF252525"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="5 2 0 2"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+
+        <!-- Form Label Style -->
+        <Style x:Key="DebuggerLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+
+        <!-- Tab Header Button Style -->
+        <Style x:Key="TabHeaderButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4,4,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF2D2D2D"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Search Bar Style -->
+        <Style x:Key="SearchBarStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF1E1E1E"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="0,1,0,0"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="#FF1E1E1E" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ==================== TOP CONTROL PANEL ==================== -->
+        <Border Grid.Row="0" Style="{StaticResource ControlPanelStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- SBS Mode -->
+                <CheckBox Grid.Column="0" VerticalAlignment="Center"
+                          Style="{StaticResource RoundedCheckBox}"
+                          IsChecked="{Binding StepByStep}"
+                          ToolTip="Step by Step mode">
+                    <TextBlock Text="SBS" FontWeight="SemiBold" Foreground="#D19900" Margin="0 0 2 0"/>
+                </CheckBox>
+
+                <!-- Test Data -->
+                <TextBlock Grid.Column="1" Style="{StaticResource DebuggerLabelStyle}" Text="Data:"/>
+                <TextBox Grid.Column="2" 
+                         Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding TestData}"
+                         ToolTip="Test data string"
+                         Margin="0 0 5 0"/>
+
+                <!-- Wordlist Type -->
+                <TextBlock Grid.Column="3" Style="{StaticResource DebuggerLabelStyle}" Text="Wordlist:"/>
+                <ComboBox Grid.Column="4" 
+                          Style="{StaticResource RoundedComboBox}"
+                          ItemsSource="{Binding WordlistTypes}"
+                          SelectedItem="{Binding WordlistType}"
+                          Width="auto"/>
+
+                <!-- Persist Log -->
+                <CheckBox Grid.Column="5" VerticalAlignment="Center"
+                          Style="{StaticResource RoundedCheckBox}" Margin="5 0 5 0"
+                          Content="Persist log"
+                          IsChecked="{Binding PersistLog}"/>
+            </Grid>
+        </Border>
+
+        <!-- ==================== MIDDLE CONTROL PANEL ==================== -->
+        <Border Grid.Row="1" Style="{StaticResource ControlPanelStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Use Proxy -->
+                <CheckBox Grid.Column="0" 
+                          Style="{StaticResource RoundedCheckBox}"
+                          IsChecked="{Binding UseProxy}"/>
+
+                <!-- Proxy String -->
+                <TextBlock Grid.Column="1" Style="{StaticResource DebuggerLabelStyle}" Text="Proxy:"/>
+                <TextBox Grid.Column="2" 
+                         Style="{StaticResource RoundedTextBox}"
+                         Text="{Binding TestProxy}"
+                         ToolTip="Proxy string (host:port or user:pass@host:port)"
+                         Margin="0 0 5 0"/>
+
+                <!-- Proxy Type -->
+                <ComboBox Grid.Column="3" 
+                          Style="{StaticResource RoundedComboBox}"
+                          ItemsSource="{Binding ProxyTypes}"
+                          SelectedItem="{Binding ProxyType}"
+                          Margin="0 0 5 0"
+                          Width="70"/>
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="4" Orientation="Horizontal">
+                    <Button Click="Start"
+                            Style="{StaticResource StyledSuccessButton}"
+                            Width="70"
+                            Height="25"
+                            Visibility="{Binding CanStart, Converter={StaticResource BoolToVis}}"
+                            ToolTip="Start debugging">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconEntypo Kind="ControllerPlay" Width="14" Height="14"/>
+                            <TextBlock Text="Start" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="TakeStep"
+                            Style="{StaticResource StyledPrimaryButton}"
+                            Width="85"
+                            Height="25"
+                            Margin="5 0 0 0"
+                            Visibility="{Binding CanTakeStep, Converter={StaticResource BoolToVis}}"
+                            ToolTip="Execute next step">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="StepForward" Width="14" Height="14"/>
+                            <TextBlock Text="Step" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Click="Stop"
+                            Style="{StaticResource StyledDangerButton}"
+                            Width="70"
+                            Height="25"
+                            Margin="5 0 0 0"
+                            Visibility="{Binding CanStop, Converter={StaticResource BoolToVis}}"
+                            ToolTip="Stop debugging">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconEntypo Kind="ControllerStop" Width="14" Height="14"/>
+                            <TextBlock Text="Stop" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ==================== BOTTOM TABS AREA ==================== -->
+        <Border Grid.Row="2" 
+                Background="#FF252525" 
+                BorderBrush="#40D19900" 
+                BorderThickness="1" 
+                CornerRadius="6,6,0,0"
+                Margin="0,0,0,0">
+
+            <TabControl x:Name="tabControl" 
+                        Background="Transparent" 
+                        BorderThickness="0"
+                        Margin="0">
+
+                <TabControl.Template>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Custom Tab Headers -->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,10,0,0">
+                                <Button Click="ShowLog" Style="{StaticResource TabHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconRadixIcons Kind="ActivityLog" Width="14" Height="14" Foreground="#FF28A745"/>
+                                        <TextBlock Text="Log" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Click="ShowVariables" Style="{StaticResource TabHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterial Kind="Variable" Width="14" Height="14" Foreground="#D19900"/>
+                                        <TextBlock Text="Variables" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Click="ShowHTML" Style="{StaticResource TabHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconEntypo Kind="Browser" Width="14" Height="14" Foreground="#FFFD7E14"/>
+                                        <TextBlock Text="HTML" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+
+                            <!-- Content Area -->
+                            <ContentPresenter Grid.Row="1" 
+                                              ContentSource="SelectedContent"
+                                              Margin="0,10,0,0"/>
+                        </Grid>
+                    </ControlTemplate>
+                </TabControl.Template>
+
+                <!-- Log Tab Content -->
+                <TabItem>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- WinForms RichTextBox - FIXED FONT PROPERTY -->
+                        <Border Grid.Row="0" 
+                                Background="#FF1A1A1A" 
+                                BorderBrush="#40D19900" 
+                                BorderThickness="0,0,0,1"
+                                Padding="8">
+                            <WindowsFormsHost>
+                                <wf:RichTextBox x:Name="logRTB"
+                                                Dock="Fill"
+                                                ForeColor="#FFE0E0E0"
+                                                BackColor="#FF1A1A1A"
+                                                ReadOnly="True"
+                                                ScrollBars="Vertical"
+                                                BorderStyle="None"
+                                                DetectUrls="False"
+                                                Font="Consolas, 11pt"/>
+                            </WindowsFormsHost>
+                        </Border>
+
+                        <!-- Search Bar -->
+                        <Border Grid.Row="1" Style="{StaticResource SearchBarStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0"
+                                         Style="{StaticResource RoundedTextBox}"
+                                         Text="{Binding SearchString}"
+                                         Margin="0,0,6,0"
+                                         Padding="3"
+                                         ToolTip="Search term"/>
+
+                                <Button Grid.Column="1" Margin="0 0 5 0"
+                                        Click="Search"
+                                        Style="{StaticResource StyledPrimaryButton}"
+                                        Width="70">
+                                    <StackPanel Orientation="Horizontal">
+                                        <iconPacks:PackIconMaterialDesign Kind="Search" Width="14" Height="14"/>
+                                        <TextBlock Text="Search"  VerticalAlignment="Center" Margin="4,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Grid.Column="2"
+                                        Click="PreviousMatch"
+                                        Style="{StaticResource StyledPrimaryButton}"
+                                        Width="32"
+                                        Padding="0">
+                                    <iconPacks:PackIconUnicons Kind="ArrowUp" Width="14" Height="14"/>
+                                </Button>
+
+                                <TextBlock Grid.Column="3"
+                                           Style="{StaticResource DebuggerLabelStyle}"
+                                           Text="{Binding MatchInfo}"
+                                           Margin="8,0,8,0"
+                                           MinWidth="50"
+                                           TextAlignment="Center"/>
+
+                                <Button Grid.Column="4"
+                                        Click="NextMatch"
+                                        Style="{StaticResource StyledPrimaryButton}"
+                                        Width="32"
+                                        Padding="0"
+                                        Margin="0">
+                                    <iconPacks:PackIconUnicons Kind="ArrowDown" Width="14" Height="14"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <!-- Variables Tab Content - FIXED FONT PROPERTY -->
+                <TabItem>
+                    <Border Background="#FF1A1A1A" 
+                            BorderBrush="#40D19900" 
+                            BorderThickness="0,0,0,1"
+                            Padding="8">
+                        <WindowsFormsHost>
+                            <wf:RichTextBox x:Name="variablesRTB"
+                                            Dock="Fill"
+                                            ForeColor="#FFE0E0E0"
+                                            BackColor="#FF1A1A1A"
+                                            ReadOnly="True"
+                                            ScrollBars="Vertical"
+                                            BorderStyle="None"
+                                            DetectUrls="False"
+                                            Font="Consolas, 11pt"/>
+                        </WindowsFormsHost>
+                    </Border>
+                </TabItem>
+
+                <!-- HTML Tab Content -->
+                <TabItem>
+                    <Border Background="#FF1A1A1A" 
+                            BorderBrush="#40D19900" 
+                            BorderThickness="0,0,0,1">
+                        <uc:HTMLViewer x:Name="htmlViewer" VerticalAlignment="Stretch"/>
+                    </Border>
+                </TabItem>
+            </TabControl>
+        </Border>
+    </Grid>
+</Page>

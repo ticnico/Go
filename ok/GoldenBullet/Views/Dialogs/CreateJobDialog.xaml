@@ -1,0 +1,110 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.CreateJobDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      mc:Ignorable="d" 
+      d:DesignHeight="400" d:DesignWidth="700"
+      Title="Create a Job"
+      Background="#1e1e1e">
+
+    <Border Padding="30" Background="#1e1e1e">
+        <StackPanel Orientation="Vertical" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MaxWidth="500">
+
+            <!-- Title -->
+            <TextBlock Text="Create a Job" 
+                       FontSize="20" 
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       Margin="0 0 0 25"/>
+
+            <!-- Multi Run Job Section -->
+            <TextBlock Text="A Multi Run Job will let you run a config using input data such as wordlists or combinations of letters."
+                       Foreground="#b0b0b0"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Margin="0 0 0 10"
+                       LineHeight="18"/>
+
+            <Button Click="CreateMultiRunJob" 
+                    Margin="0 0 0 25"
+                    Width="140"
+                    Height="35"
+                    Background="#4a7eff"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    FontSize="13"
+                    FontWeight="Medium">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="4">
+                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                          VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5a8eff"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="Multi Run Job"/>
+            </Button>
+
+            <!-- Proxy Check Job Section -->
+            <TextBlock Text="A Proxy Check Job will let you test your proxies against a given target site to check their latency, country etc."
+                       Foreground="#b0b0b0"
+                       FontSize="12"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Margin="0 0 0 10"
+                       LineHeight="18"/>
+
+            <Button Click="CreateProxyCheckJob"
+                    Width="140"
+                    Height="35"
+                    Background="#4a7eff"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    FontSize="13"
+                    FontWeight="Medium">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" 
+                                            CornerRadius="4">
+                                        <ContentPresenter HorizontalAlignment="Center" 
+                                                          VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5a8eff"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <TextBlock Text="Proxy Check Job"/>
+            </Button>
+        </StackPanel>
+    </Border>
+</Page>

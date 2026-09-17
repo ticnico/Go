@@ -1,0 +1,386 @@
+<Page x:Class="GoldenBullet.Views.Pages.Hits"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="780"
+      Title="Hits"
+      Background="#FF121212">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+        <ContextMenu x:Key="ItemContextMenu">
+            <MenuItem Header="Copy Selected">
+                <MenuItem Header="Data" Click="CopySelected"/>
+                <MenuItem Header="Proxy" Click="CopySelectedProxies"/>
+                <MenuItem Header="Separator" IsEnabled="False"/>
+                <MenuItem Header="Data with Capture" Click="CopySelectedWithCapture"/>
+                <MenuItem Header="Data (Full)" Click="CopySelectedFull"/>
+            </MenuItem>
+            <MenuItem Header="Save Selected">
+                <MenuItem Header="Data" Click="SaveSelected"/>
+                <MenuItem Header="Data with Capture" Click="SaveSelectedWithCapture"/>
+                <MenuItem Header="Data (Full)" Click="SaveSelectedFull"/>
+                <MenuItem Header="Custom" IsEnabled="True"/>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="Select All" Click="SelectAll"/>
+            <MenuItem Header="Send to Recheck" Click="SendToRecheck"/>
+            <Separator/>
+            <MenuItem Header="Delete Selected" Click="DeleteSelected"/>
+            <MenuItem Header="Purge All" Click="Purge"/>
+            <MenuItem Header="Delete Duplicates" Click="DeleteDuplicates"/>
+        </ContextMenu>
+
+        <!-- Toolbar Button Base Style -->
+        <Style x:Key="HitsActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF075900"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#40D19900"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#D19900" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1A1A1A"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF005A9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Specific Button Colors -->
+        <Style x:Key="BtnDelete" TargetType="Button" BasedOn="{StaticResource HitsActionButton}">
+            <Setter Property="Background" Value="#FFDC3545"/>
+            <Setter Property="BorderBrush" Value="#FFBD2130"/>
+        </Style>
+        <Style x:Key="BtnDuplicate" TargetType="Button" BasedOn="{StaticResource HitsActionButton}">
+            <Setter Property="Background" Value="#FFFD7E14"/>
+            <Setter Property="BorderBrush" Value="#FFD65B00"/>
+            <Setter Property="Foreground" Value="#FF1E1E1E"/>
+        </Style>
+        <Style x:Key="BtnPurge" TargetType="Button" BasedOn="{StaticResource HitsActionButton}">
+            <Setter Property="Background" Value="#FF6F42C1"/>
+            <Setter Property="BorderBrush" Value="#FF5A32A3"/>
+        </Style>
+        <Style x:Key="BtnSearch" TargetType="Button" BasedOn="{StaticResource HitsActionButton}">
+            <Setter Property="Background" Value="#FF005A7E"/>
+            <Setter Property="BorderBrush" Value="#FF005A9E"/>
+        </Style>
+
+        <Style x:Key="HitsComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+
+        <!-- ✅ UPDATED: Header Style matching Proxies.xaml -->
+        <Style x:Key="HitsHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="5,5,5,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}">
+                                <TextBlock Text="{TemplateBinding Content}"
+                                           Padding="{TemplateBinding Padding}"
+                                           Width="{TemplateBinding Width}"
+                                           TextAlignment="Left"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontWeight="{TemplateBinding FontWeight}"/>
+                            </Border>
+                            <!-- ✅ Resize thumb (matches Proxies.xaml) -->
+                            <Thumb x:Name="PART_HeaderGripper"
+                                   HorizontalAlignment="Right"
+                                   Margin="0,4,0,4"
+                                   Opacity="0.3"
+                                   Width="2"
+                                   Background="Transparent"
+                                   Cursor="SizeWE"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <!-- Main Container -->
+    <Grid Background="#FF1E1E1E" Margin="10">
+        <Border Background="#FF252525" 
+                BorderBrush="#40D19900" 
+                BorderThickness="1" 
+                CornerRadius="6">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 1. HEADER -->
+                <Border Grid.Row="0" 
+                        Background="#252525" 
+                        Padding="15,12" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,0,0,1" 
+                        CornerRadius="6,6,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="CheckCircleOutline" 
+                                                    Width="20" Height="20" 
+                                                    Foreground="#FF28A745" 
+                                                    Margin="0,0,10,0"/>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Hits Manager" 
+                                           FontSize="14" FontWeight="SemiBold" 
+                                           Foreground="#FFE0E0E0"/>
+                                <Border Background="#FF2D2D2D" 
+                                        BorderBrush="#40D19900" 
+                                        BorderThickness="1"
+                                        CornerRadius="4" 
+                                        Padding="6,1" 
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Total, StringFormat='{}{0}'}" 
+                                               Foreground="#FFE0E0E0" 
+                                               FontSize="11" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="Manage successful hits and captured data" 
+                                       FontSize="10" Foreground="#FFAAAAAA"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- 2. TOOLBAR -->
+                <Border Grid.Row="1" 
+                        Background="#252525" 
+                        Padding="10,8" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 1">
+                        <Button x:Name="DeleteSelectedButton"
+                            Click="DeleteSelected"
+                            Style="{StaticResource StyledDangerButton}"
+                            ToolTip="Delete selected hits"
+                            Margin="0 0 8 0" Width="80">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🗑️" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Delete" Foreground="White" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="DeleteDuplicatesButton"
+                            Click="DeleteDuplicates"
+                            Style="{StaticResource StyledWarningButton}"
+                            ToolTip="Remove duplicate hits"
+                            Margin="0 0 8 0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📋" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Duplicates" Foreground="White" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ExportAllButton"
+                            Click="ExportAll"
+                            Style="{StaticResource StyledEditButton}"
+                            ToolTip="Export all hits by config"
+                            Margin="0 0 8 0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📥" FontSize="14" Margin="0,-5,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Export All" Foreground="White" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="PurgeButton"
+                            Click="Purge" Width="80"
+                            Style="{StaticResource StyledDangerButton}"
+                            ToolTip="Purge invalid hits"
+                            Margin="0 0 8 0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🧹" FontSize="14" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Purge" Foreground="White" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Border>
+
+                <!-- 3. LISTVIEW -->
+                <Border Grid.Row="2" 
+                        Background="#FF1A1A1A" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,1,0,1">
+                    <Grid>
+                        <ListView x:Name="hitsListView"
+                                  Background="#252525"
+                                  BorderThickness="0"                                  
+                                  ItemsSource="{Binding HitsCollection}"
+                                  SelectionMode="Extended"
+                                  VirtualizingPanel.IsVirtualizing="True"
+                                  VirtualizingPanel.VirtualizationMode="Recycling"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.CanContentScroll="True"
+                                  ScrollViewer.IsDeferredScrollingEnabled="True">
+
+                            <ListView.Resources>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseRightButtonDown" Handler="LVIMouseRightButtonDown" />
+                                    <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                                    <Setter Property="Padding" Value="10,6"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#FF2D2D2D"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <GridViewRowPresenter/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#FF2D2D2D"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#FF2D2D2D"/>
+                                            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                                            <Setter Property="BorderBrush" Value="#40D19900"/>
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="#D19900" BlurRadius="6" ShadowDepth="0" Opacity="0.2"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.Resources>
+
+                            <ListView.View>
+                                <GridView>
+                                    <!-- ✅ Apply the matching header style to all columns -->
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <StaticResource ResourceKey="HitsHeaderStyle"/>
+                                    </GridView.ColumnHeaderContainerStyle>
+
+                                    <GridViewColumn Header="Data" DisplayMemberBinding="{Binding Data}" Width="200"/>
+                                    <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="80"/>
+                                    <GridViewColumn Header="Config" DisplayMemberBinding="{Binding ConfigName}" Width="120"/>
+                                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}" Width="100"/>
+                                    <GridViewColumn Header="Wordlist" DisplayMemberBinding="{Binding WordlistName}" Width="100"/>
+                                    <GridViewColumn Header="Proxy" DisplayMemberBinding="{Binding Proxy}" Width="120"/>
+                                    <GridViewColumn Header="Captured Data" DisplayMemberBinding="{Binding CapturedData}" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                        <!-- Empty State -->
+                        <TextBlock x:Name="emptyMessage" 
+                                   Text="No hits recorded yet" 
+                                   Foreground="#FF555555" 
+                                   FontSize="14"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"
+                                   Visibility="Collapsed"/>
+                    </Grid>
+                </Border>
+
+                <!-- 4. FILTERS BAR -->
+                <Border Grid.Row="3" 
+                        Background="#252525" 
+                        Padding="10,8" 
+                        BorderBrush="#40D19900" 
+                        BorderThickness="0,1,0,0" 
+                        CornerRadius="0,0,6,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Filters:" VerticalAlignment="Center" Foreground="#FF555555" FontSize="12" Margin="0,0,10,0"/>
+
+                        <TextBox x:Name="filterTextbox"
+                                 Grid.Column="1"
+                                 Text="{Binding SearchString}"
+                                 Style="{StaticResource RoundedTextBox}"
+                                 KeyDown="UpdateSearch" Margin="0,0,5,0"/>
+
+                        <Button Click="Search" Grid.Column="2" Style="{StaticResource StyledEditButton}" Width="110">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterialDesign Kind="Search" Width="14" Height="14" Margin="0,0,5,0"/>
+                                <TextBlock Text="Search" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <TextBlock Grid.Column="3" Text="Config:" VerticalAlignment="Center" Foreground="#FF555555" FontSize="12" Margin="15,0,5,0"/>
+                        <ComboBox ItemsSource="{Binding ConfigNames}"
+          Grid.Column="4"
+          Style="{StaticResource RoundedComboBox}"
+          Width="150"
+          SelectedValue="{Binding ConfigFilter, UpdateSourceTrigger=PropertyChanged}"
+          SelectedValuePath="."/>
+
+                        <TextBlock Grid.Column="5" Text="Type:" VerticalAlignment="Center" Foreground="#FF555555" FontSize="12" Margin="15,0,5,0"/>
+                        <ComboBox ItemsSource="{Binding HitTypes}"
+          Grid.Column="6"
+          Style="{StaticResource RoundedComboBox}"
+          Width="120"
+          SelectedValue="{Binding TypeFilter, UpdateSourceTrigger=PropertyChanged}"
+          SelectedValuePath="."/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

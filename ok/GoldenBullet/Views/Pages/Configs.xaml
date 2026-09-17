@@ -1,0 +1,492 @@
+<Page x:Class="GoldenBullet.Views.Pages.Configs"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+mc:Ignorable="d"
+d:DesignHeight="800" d:DesignWidth="1200"
+Title="Configs"
+Background="#FF1E1E1E">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <!-- Toolbar Button Base Style -->
+        <Style x:Key="ConfigActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#FFE0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+Background="{TemplateBinding Background}"
+BorderBrush="{TemplateBinding BorderBrush}"
+BorderThickness="{TemplateBinding BorderThickness}"
+CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FFD700"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FFD700" BlurRadius="8" ShadowDepth="0" Opacity="0.4"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF1A1A1A"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF005A9E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Icon Only Button Style -->
+        <Style x:Key="IconActionButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="ToolTipService.ShowDuration" Value="2000"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF2D2D2D"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#FF3C3C3C"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Grid Card Style -->
+        <Style x:Key="GridCardStyle" TargetType="Border">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#40D19900"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="140"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                    <Setter Property="Background" Value="#FF3D3D3D"/>
+                    <Setter Property="BorderBrush" Value="#FFD700"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="#FFD700" BlurRadius="8" ShadowDepth="0" Opacity="0.3"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!-- Warning Box Style -->
+        <Style x:Key="WarningBoxStyle" TargetType="Border">
+            <Setter Property="Background" Value="#FF2D2D2D"/>
+            <Setter Property="BorderBrush" Value="#FFDC3545"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+    </Page.Resources>
+    <!-- Main Container -->
+    <Grid Background="#FF1E1E1E" Margin="10">
+        <Border Background="#FF252525"
+BorderBrush="#40D19900"
+BorderThickness="1"
+CornerRadius="6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- Header -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Warning -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Toolbar -->
+                    <RowDefinition Height="*"/>
+                    <!-- Content -->
+                </Grid.RowDefinitions>
+                <!-- 1. HEADER -->
+                <Border Grid.Row="0"
+Background="#FF1E1E1E"
+Padding="15,12"
+BorderBrush="#40D19900"
+BorderThickness="0,0,0,1"
+CornerRadius="6,6,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <iconPacks:PackIconMaterial Kind="Cog"
+Width="20" Height="20"
+Foreground="#D19900"
+Margin="0,0,10,0"/>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Configs Manager"
+FontSize="14" FontWeight="SemiBold"
+Foreground="#FFE0E0E0"/>
+                                <Border Background="#FF2D2D2D"
+BorderBrush="#40D19900"
+BorderThickness="1"
+CornerRadius="4"
+Padding="6,1"
+Margin="10,0,0,0"
+VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Total}"
+Foreground="#FFE0E0E0"
+FontSize="11" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                            <TextBlock Text="Import, export and manage your configurations"
+FontSize="10" Foreground="#FFAAAAAA"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <!-- 2. WARNING BANNER -->
+                <Border Grid.Row="1" Style="{StaticResource WarningBoxStyle}" Margin="15,15,15,10">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <iconPacks:PackIconMaterial Kind="Alert"
+Width="18" Height="18"
+Foreground="#FFDC3545"
+Margin="0,0,8,0"/>
+                            <TextBlock Text="Security Warning"
+Foreground="#FFDC3545"
+FontWeight="Bold"
+FontSize="13"/>
+                        </StackPanel>
+                        <TextBlock Foreground="#FFE0E0E0" FontSize="12" TextWrapping="Wrap" LineHeight="18">
+Configs can contain C# code executed without automatic safety checks. If using third-party configs, it is
+<Run FontWeight="Bold" Foreground="#FFDC3545">your responsibility</Run>
+to verify they are safe.
+<Run FontWeight="Bold" Foreground="#FFDC3545">Always inspect</Run>
+the LoliCode/C# code before running if you don't fully trust the source.
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+                <!-- 3. TOOLBAR -->
+                <Border Grid.Row="2"
+Background="#FF1E1E1E"
+Padding="10,8"
+BorderBrush="#40D19900"
+BorderThickness="0,0,0,1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Left: Main Actions -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <Button Click="Create" Style="{StaticResource IconActionButton}" ToolTip="New Config" Foreground="#28A745">
+                                <iconPacks:PackIconMaterial Kind="PlusBox" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="Import" Style="{StaticResource IconActionButton}" ToolTip="Import Config" Foreground="Blue">
+                                <iconPacks:PackIconMaterial Kind="Import" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="Edit" Style="{StaticResource IconActionButton}" ToolTip="Edit" Foreground="Yellow">
+                                <iconPacks:PackIconMaterial Kind="Pencil" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="Save" Style="{StaticResource IconActionButton}" ToolTip="Save" Foreground="#FF17A2B8">
+                                <iconPacks:PackIconMaterial Kind="ContentSave" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="Delete" Style="{StaticResource IconActionButton}" ToolTip="Delete" Foreground="Red">
+                                <iconPacks:PackIconMaterial Kind="Delete" Width="20" Height="20"/>
+                            </Button>
+                            <Rectangle Width="1" Fill="#FF3C3C3C" Margin="8,4" VerticalAlignment="Stretch"/>
+                            <Button Click="OpenFolder" Style="{StaticResource IconActionButton}" ToolTip="Open Folder" Foreground="Orange">
+                                <iconPacks:PackIconMaterial Kind="FolderOpen" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="Rescan" Style="{StaticResource IconActionButton}" ToolTip="Rescan" Foreground="#FF6F42C1">
+                                <iconPacks:PackIconMaterial Kind="Refresh" Width="20" Height="20"/>
+                            </Button>
+                        </StackPanel>
+                        <!-- Right: View Toggle & Search -->
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Click="SwitchToGridView" ToolTip="Grid View">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource IconActionButton}">
+                                        <Setter Property="Foreground" Value="#FF666666"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsGridView}" Value="True">
+                                                <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <iconPacks:PackIconMaterial Kind="ViewGrid" Width="20" Height="20"/>
+                            </Button>
+                            <Button Click="SwitchToTableView" ToolTip="Table View">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource IconActionButton}">
+                                        <Setter Property="Foreground" Value="#FF666666"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsTableView}" Value="True">
+                                                <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <iconPacks:PackIconMaterial Kind="Table" Width="20" Height="20"/>
+                            </Button>
+                            <Rectangle Width="1" Fill="#FF3C3C3C" Margin="8,4" VerticalAlignment="Stretch"/>
+                            <!-- ✅ NEW: Category Filter Label and ComboBox -->
+                            <TextBlock Text="Category:" 
+           Foreground="#FFAAAAAA" 
+           FontSize="12" 
+           VerticalAlignment="Center" 
+           Margin="0,0,8,0"/>
+
+                            <ComboBox x:Name="categoryFilterCombobox"
+          Width="130"
+          Margin="0,0,12,0"
+          SelectionChanged="CategoryFilter_SelectionChanged"
+          Background="#FF2D2D2D"
+          Foreground="#FFE0E0E0"
+          BorderBrush="#40D19900"
+          Padding="8,6"
+          BorderThickness="1"
+          FontSize="12"
+          VerticalContentAlignment="Center"
+          ToolTip="Filter by category"/>
+                            <!-- Search -->
+                            <TextBox x:Name="filterTextbox"
+         AcceptsReturn="False"
+         Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}"
+         Width="180"
+         TextChanged="FilterTextbox_TextChanged"
+         KeyDown="UpdateSearch"
+Background="#FF2D2D2D"
+Foreground="#FFE0E0E0"
+BorderBrush="#40D19900"
+Padding="8,6"
+BorderThickness="1"
+FontSize="12"
+VerticalContentAlignment="Center"/>
+                            <Button Click="Search"
+Background="#005A9E"
+BorderBrush="#FF005A9E"
+Foreground="White"
+Padding="10,6"
+Margin="8,0,0,0"
+Cursor="Hand"
+BorderThickness="1">
+                                <iconPacks:PackIconMaterial Kind="Magnify" Width="16" Height="16"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <!-- 4. CONTENT AREA -->
+                <Grid Grid.Row="3">
+                    <!-- GRID VIEW -->
+                    <Border Visibility="{Binding IsGridView, Converter={StaticResource BoolToVis}}">
+                        <!-- Use the ListBox's built-in ScrollViewer instead of wrapping it with an outer ScrollViewer.
+                             Wrapping the ListBox in a ScrollViewer prevents item interaction (selection, clicks, double-clicks)
+                             because the outer ScrollViewer handles mouse input. Move padding and scroll settings to the ListBox. -->
+                        <ListBox x:Name="configsGridView"
+                                 ItemsSource="{Binding ConfigsCollection}"
+                                 SelectionMode="Extended"
+                                 SelectionChanged="GridItem_SelectionChanged"
+                                 HorizontalContentAlignment="Stretch"
+                                 VerticalContentAlignment="Stretch"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 Padding="10"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="7" HorizontalAlignment="Stretch"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- ✅ MouseLeftButtonDown with ClickCount check (Border doesn't support MouseDoubleClick) -->
+                                    <Border Style="{StaticResource GridCardStyle}"
+                                            MouseLeftButtonDown="GridItem_MouseLeftButtonDown">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Image Grid.Row="0"
+                                                   Source="{Binding Icon}"
+                                                   Stretch="Uniform"
+                                                   MaxWidth="48"
+                                                   MaxHeight="48"
+                                                   Margin="10"/>
+                                            <TextBlock Grid.Row="1"
+                                                       Text="{Binding Name}"
+                                                       Foreground="#FFE0E0E0"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="12"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Margin="8,4,8,0"
+                                                       TextAlignment="Center"/>
+                                            <StackPanel Grid.Row="2" Margin="8,4,8,8">
+                                                <TextBlock Text="{Binding Author}"
+                                                           Foreground="#FFAAAAAA"
+                                                           FontSize="10"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           TextAlignment="Center"/>
+                                                <TextBlock Text="{Binding Category}"
+                                                           Foreground="#FF666666"
+                                                           FontSize="9"
+                                                           TextAlignment="Center"
+                                                           Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                    <!-- TABLE VIEW -->
+                    <Border Visibility="{Binding IsTableView, Converter={StaticResource BoolToVis}}"
+Background="#FF1A1A1A">
+                        <ListView x:Name="configsListView"
+Foreground="#FFE0E0E0"
+Background="Transparent"
+ItemsSource="{Binding ConfigsCollection}"
+SelectionMode="Extended"
+BorderThickness="0"
+VirtualizingPanel.IsVirtualizing="True">
+                            <ListView.Resources>
+                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                    <Setter Property="Background" Value="#FF1E1E1E"/>
+                                    <Setter Property="Foreground" Value="#FFAAAAAA"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="Padding" Value="12,8"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#40D19900"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                                <Grid>
+                                                    <Border Background="{TemplateBinding Background}"
+BorderBrush="{TemplateBinding BorderBrush}"
+BorderThickness="{TemplateBinding BorderThickness}"
+Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <Thumb x:Name="PART_HeaderGripper"
+HorizontalAlignment="Right"
+Width="2"
+                                                           Height="20"
+                                                           Opacity="0.5"
+Background="Transparent"
+Cursor="SizeWE">
+                                                    </Thumb>
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="MouseDoubleClick" Handler="ListItemDoubleClick"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#FFE0E0E0"/>
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="#FF2D2D2D"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListViewItem">
+                                                <Border Background="{TemplateBinding Background}"
+BorderBrush="{TemplateBinding BorderBrush}"
+BorderThickness="{TemplateBinding BorderThickness}"
+Padding="{TemplateBinding Padding}">
+                                                    <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#FF2D2D2D"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="#FF2D2D2D"/>
+                                                        <Setter Property="BorderBrush" Value="#FFD700"/>
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect Color="#FFD700" BlurRadius="6" ShadowDepth="0" Opacity="0.2"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="#" Width="60">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Image Source="{Binding Icon}" Width="24" Height="24" Margin="8,4"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="auto"/>
+                                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="200"/>
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category}" Width="100"/>
+                                    <GridViewColumn Header="Remote" DisplayMemberBinding="{Binding RemoteStatus}" Width="80"/>
+                                    <GridViewColumn Header="Proxies" DisplayMemberBinding="{Binding ProxiesStatus}" Width="80"/>
+                                    <GridViewColumn Header="Wordlists" DisplayMemberBinding="{Binding AllowedWordlistTypes}" Width="auto"/>
+                                    <GridViewColumn Header="Created" DisplayMemberBinding="{Binding CreationDate, StringFormat='{}{0:MMM d, yyyy}'}" Width="auto"/>
+                                    <GridViewColumn Header="Modified" DisplayMemberBinding="{Binding LastModified, StringFormat='{}{0:MMM d, yyyy}'}" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

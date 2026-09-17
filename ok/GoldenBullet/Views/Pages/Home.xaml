@@ -1,0 +1,199 @@
+<Page x:Class="GoldenBullet.Views.Pages.Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:local="clr-namespace:GoldenBullet.Views.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="850" d:DesignWidth="1200"
+      Title="Home"
+      Background="#FF1E1E1E">
+
+    <Page.Resources>
+        <!-- Original GoldenBullet Colors -->
+        <SolidColorBrush x:Key="GoldAccent" Color="#50D19900"/>
+        <SolidColorBrush x:Key="BgDark" Color="#FF121212"/>
+        <SolidColorBrush x:Key="CardBg" Color="#FF1E1E1E"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#333333"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#FFE0E0E0"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#FFAAAAAA"/>
+
+        <!-- Styles -->
+        <Style x:Key="DashboardCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBg}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource GoldAccent}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+        </Style>
+
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style x:Key="BigValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        
+        
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- 1. HEADER -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="GoldenBullet" FontSize="32" FontWeight="Bold" Foreground="#d19900"/>
+                    <TextBlock x:Name="txtWelcome" Text="Welcome back, Admin!" FontSize="16" Foreground="{StaticResource TextSecondary}" Margin="0,5,0,0"/>
+                </StackPanel>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <TextBlock Text="Server Time" Foreground="{StaticResource TextSecondary}" FontSize="12" HorizontalAlignment="Right"/>
+                    <TextBlock x:Name="txtServerTime" Text="Loading..." FontSize="16" Foreground="White" HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- 2. ANNOUNCEMENT -->
+            <Border Grid.Row="1" Background="#FF2D2D2D" BorderBrush="{StaticResource GoldAccent}" BorderThickness="1" CornerRadius="8" Padding="20" Margin="0,0,0,20" Opacity="0.9">
+                <StackPanel>
+                    <TextBlock Text="📢 Announcements" Foreground="#d19900" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Text="System is running normally. All services operational." Foreground="{StaticResource TextPrimary}" FontSize="14"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 3. SYSTEM PERFORMANCE TITLE -->
+            <TextBlock Grid.Row="2" Text="System Performance" Style="{StaticResource SectionTitleStyle}"/>
+
+            <!-- 4. PERFORMANCE CARDS -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- CPU CARD -->
+                <Border Grid.Column="0" Style="{StaticResource DashboardCardStyle}" Margin="0,0,5,20">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="CPU Usage" FontSize="14" FontWeight="SemiBold"/>
+                            <iconPacks:PackIconMaterial Kind="Cpu64Bit" Width="16" Height="16" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <TextBlock x:Name="txtCpuValue" Text="0%" Style="{StaticResource BigValueStyle}" Margin="0,10,0,5"/>
+                        <ProgressBar x:Name="progCpu" Value="0" Maximum="100" Height="10" Style="{StaticResource GlowingProgressBar}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- MEMORY CARD -->
+                <Border Grid.Column="1" Style="{StaticResource DashboardCardStyle}" Margin="5,0,5,20">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="Memory Usage" FontSize="14" FontWeight="SemiBold"/>
+                            <iconPacks:PackIconMaterial Kind="Memory" Width="16" Height="16" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <TextBlock x:Name="txtMemValue" Text="0%" Style="{StaticResource BigValueStyle}" Margin="0,10,0,5"/>
+                        <ProgressBar x:Name="progMem" Value="0" Maximum="100" Height="10" Style="{StaticResource GlowingProgressBar}"/>
+                        <TextBlock x:Name="txtMemPercent" Text="0 MB / 0 MB" Foreground="{StaticResource TextSecondary}" FontSize="10" HorizontalAlignment="Right" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- NETWORK CARD -->
+                <Border Grid.Column="2" Style="{StaticResource DashboardCardStyle}" Margin="10,0,0,20">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="Network Activity" FontSize="14" FontWeight="SemiBold"/>
+                            <iconPacks:PackIconMaterial Kind="Lan" Width="16" Height="16" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Down" Foreground="{StaticResource TextSecondary}" FontSize="10"/>
+                                <TextBlock x:Name="txtNetDown" Text="0 B/s" Foreground="White" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Up" Foreground="{StaticResource TextSecondary}" FontSize="10"/>
+                                <TextBlock x:Name="txtNetUp" Text="0 B/s" Foreground="White" FontSize="14"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- 5. COLLECTION TITLE -->
+            <TextBlock Grid.Row="4" Text="Your Collection" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,5"/>
+
+            <!-- 6. STATS GRID (Updated with x:Names) -->
+            <UniformGrid Grid.Row="5" Columns="8" Rows="1" Margin="0,0,0,5">
+                <local:StatCard x:Name="statJobs" Number="0" Label="Jobs"/>
+                <local:StatCard x:Name="statProxies" Number="0" Label="Proxies"/>
+                <local:StatCard x:Name="statWordlists" Number="0" Label="Wordlists"/>
+                <local:StatCard x:Name="statLines" Number="0" Label="Lines"/>
+                <local:StatCard x:Name="statHits" Number="0" Label="Hits"/>
+                <local:StatCard x:Name="statConfigs" Number="0" Label="Configs"/>
+                <local:StatCard x:Name="statAdmins" Number="1" Label="Admins"/>
+                <local:StatCard x:Name="statPlugins" Number="0" Label="Plugins"/>
+            </UniformGrid>
+
+            <!-- 7. RECENT HITS TITLE -->
+            <TextBlock Grid.Row="6" Text="Recent Hits" Style="{StaticResource SectionTitleStyle}"/>
+
+            <!-- 8. CHART -->
+            <Border Grid.Row="7" Style="{StaticResource DashboardCardStyle}" Margin="0,0,0,20" Height="220">
+                <Grid x:Name="ChartGrid" Background="#303B3B3B" ClipToBounds="True">
+                    <Canvas x:Name="HitsCanvas">
+                        <!-- Bars drawn by C# -->
+                    </Canvas>
+                </Grid>
+            </Border>
+
+            <!-- 9. FOOTER -->
+            <Grid Grid.Row="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Uptime" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock x:Name="txtUptime" Text="00:00:00" Foreground="White" FontSize="14"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="Build" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="v2.2" Foreground="White" FontSize="14"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                    <TextBlock Text="Status" Style="{StaticResource LabelStyle}"/>
+                    <TextBlock Text="Online" Foreground="#4CAF50" FontSize="14" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</Page>

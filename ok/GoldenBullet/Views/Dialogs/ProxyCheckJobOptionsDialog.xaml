@@ -1,0 +1,156 @@
+<Page x:Class="GoldenBullet.Views.Dialogs.ProxyCheckJobOptionsDialog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:GoldenBullet.Views.Dialogs"
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:uc="clr-namespace:GoldenBullet.Controls"
+      xmlns:ho="clr-namespace:Core.Models.Hits;assembly=Core"
+      mc:Ignorable="d"
+      Title="ProxyCheckJobOptionsDialog"
+      Background="Black"
+      MinWidth="900">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto"
+        Background="#FF1E1E1E">
+        <Border Padding="20" Background="#FF1E1E1E">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="0,0,0,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="400"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Header with Inline Buttons -->
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,0,20">
+                        <!-- Main content: icon + title + description -->
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <iconPacks:PackIconMaterial Kind="Server" Width="24" Height="24" Foreground="#FFFFD700" Margin="0,0,10,0"/>
+                                <TextBlock Text="Create Proxy Check Job" FontSize="20" FontWeight="Bold" Foreground="#FFE0E0E0"/>
+                            </StackPanel>
+                            <TextBlock Text="Configure the settings for checking proxies against a specific target."
+                                       Foreground="#FFAAAAAA" FontSize="12" TextWrapping="Wrap" MaxWidth="800" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <!-- Buttons aligned to top-right -->
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="0,0,0,0">
+                            <Button Click="Cancel"
+                                    Margin="0,0,10,0"
+                                    Style="{StaticResource StyledPrimaryButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconOcticons Kind="ArrowLeft" />
+                                    <TextBlock VerticalAlignment="Center" Margin="10,0">Back</TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="Accept"
+                                    Style="{StaticResource StyledSuccessButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <iconPacks:PackIconOcticons Kind="Check" />
+                                    <TextBlock VerticalAlignment="Center" Margin="5,0">Accept</TextBlock>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                    <!-- Content Column -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,10,20,0">
+                        <Label Content="Start condition" Foreground="#FFE0E0E0" />
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <RadioButton
+                                Content="Start in"
+                                x:Name="startInButton"
+                                IsChecked="{Binding StartInMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                            <RadioButton
+                                Content="Start at"
+                                x:Name="startAtButton"
+                                IsChecked="{Binding StartAtMode}"
+                                Background="Transparent"
+                                Foreground="#FFE0E0E0"
+                                Margin="5,0"/>
+                        </StackPanel>
+
+                        <TabControl x:Name="startConditionTabControl" Background="Transparent" BorderThickness="0" Margin="0,5">
+                            <TabControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type TabItem}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </Style>
+                            </TabControl.ItemContainerStyle>
+                            <TabItem>
+                                <uc:TimeSpanPicker TimeSpan="{Binding StartIn, Mode=TwoWay}" />
+                            </TabItem>
+                            <TabItem>
+                                <StackPanel Orientation="Horizontal">
+                                    <mah:DateTimePicker
+                                        Width="200"
+                                        SelectedTimeFormat="Long"
+                                        SelectedDateTime="{Binding StartAtTime, Mode=TwoWay}"
+                                        Background="#FF2D2D2D"
+                                        Foreground="#FFE0E0E0"/>
+                                </StackPanel>
+                            </TabItem>
+                        </TabControl>
+
+                        <Label Content="Settings"
+                               Margin="0 25 0 0"
+                               Foreground="#FFE0E0E0" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Label Foreground="#FFE0E0E0" Width="167">Bots</Label>
+                            <mah:NumericUpDown Minimum="1"
+                                      Maximum="{Binding BotLimit}"
+                                      Interval="1"
+                                      Value="{Binding Bots}"
+                                      Width="130"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Label Foreground="#FFE0E0E0" Width="167">Timeout (milliseconds)</Label>
+                            <mah:NumericUpDown Minimum="0"
+                                      Maximum="1000000"
+                                      Interval="1000"
+                                      Value="{Binding TimeoutMilliseconds}"
+                                      Width="130"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Label Foreground="#FFE0E0E0" Width="167">Proxy group</Label>
+                            <ComboBox
+                                ItemsSource="{Binding ProxyGroupNames}"
+                                SelectedValue="{Binding ProxyGroup}"
+                                Width="205"
+                                HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <CheckBox
+                            Margin="5 5 0 0"
+                            Content="Check only untested"
+                            IsChecked="{Binding CheckOnlyUntested}"
+                            Style="{StaticResource RoundedCheckBox}" />
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Label Foreground="#FFE0E0E0" Width="167">Check on website</Label>
+                            <ComboBox
+                                ItemsSource="{Binding Targets}"
+                                SelectedValue="{Binding Target}"
+                                Width="205"
+                                HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </ScrollViewer>
+</Page>
